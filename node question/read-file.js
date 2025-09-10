@@ -10,4 +10,3 @@ const read = async () => {
   }
 };
 read();
-l;
