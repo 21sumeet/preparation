@@ -24,4 +24,14 @@ console.log(add(5, "10"));      // Outputs: 510
 
 
 
+// Unknown is safer than any , because you must perform some type of checking before performing most operations on values of type unknown.
+let userID :unknown = 12345; 
+if(typeof userID === 'string') {
+    console.log(userID.toUpperCase()); 
+} else if(typeof userID === 'number') {  
+    console.log(userID / 10); // Outputs: 1234.5
+}
+
+
+
 
