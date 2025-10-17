@@ -6,7 +6,7 @@ cont = dotenv = require("dotenv");
 dotenv.config();
 const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
-const movie = require("./models/movie.model");
+//const movie = require("./models/movie.model");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
