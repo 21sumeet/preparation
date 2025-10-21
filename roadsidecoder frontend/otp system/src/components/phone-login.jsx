@@ -12,7 +12,7 @@ const PhoneOtpForm = () => {
   const handlePhoneSubmit = (e) => {
     e.preventDefault();
 
-    // Validate phone number (basic validation)
+    // Validate phone number
     const regex = /[^0-9]/g;
     if (phone.length < 10 || regex.test(phone)) {
       alert("Invalid Phone Number");
