@@ -1,5 +1,4 @@
 const bodyParser = require("body-parser");
-const e = require("express");
 const express = require("express");
 const app = express();
 cont = dotenv = require("dotenv");
@@ -7,7 +6,7 @@ dotenv.config();
 const rateLimit = require("express-rate-limit");
 const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
-//const movie = require("./models/movie.model");
+const movieRoutes = require("./routes/movie.route");
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,6 +19,7 @@ app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+movieRoutes(app);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
