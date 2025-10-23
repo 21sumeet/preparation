@@ -32,18 +32,6 @@ app.listen(port, async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
     console.log("Connected to MongoDB");
-    // await movie.create({
-    //   name: "Inception",
-    //   description: "A mind-bending thriller",
-    //   cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Ellen Page"],
-    //   trailerUrl: "https://www.youtube.com/watch?v=YoHD9XEInc0",
-    //   releaseDate: new Date("2010-07-16"),
-    //   language: "English",
-    //   director: "Christopher Nolan",
-    //   releasestatus: "Released",
-    //   genres: ["Sci-Fi", "Thriller"],
-    // });
-
     app.listen(port, () => {
       console.log(`app listening at http://localhost:${port}`);
     });
