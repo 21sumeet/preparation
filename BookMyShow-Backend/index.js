@@ -1,7 +1,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
-cont = dotenv = require("dotenv");
+const dotenv = require("dotenv");
 dotenv.config();
 const rateLimit = require("express-rate-limit");
 const port = process.env.PORT || 3000;

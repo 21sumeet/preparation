@@ -19,6 +19,65 @@ const createMovie = async (req, res) => {
     });
   }
 };
+
+const deleteMovie = async (req, res) => {
+  try {
+    const response = await MovieModel.deleteOne({ _id: req.params.movieId });
+    if (response.deletedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        data: "",
+        message: "Movie not found",
+        error: "No movie found with the given ID",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: response,
+      message: "Movie deleted successfully",
+      error: null,
+    });
+  } catch (err) {
+    console.error("Error deleting movie", err);
+    return res.status(500).json({
+      success: false,
+      data: "",
+      message: "Error deleting movie",
+      error: err.message,
+    });
+  }
+};
+
+const getMovie = async (req, res) => {
+  try {
+    const movie = await MovieModel.findById(req.params.movieId);
+    if (!movie) {
+      return res.status(404).json({
+        success: false,
+        data: "",
+        message: "Movie not found",
+        error: "No movie found with the given ID",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: movie,
+      message: "Movie fetched successfully",
+      error: null,
+    });
+  } catch (err) {
+    console.error("Error getting movie", err);
+    return res.status(500).json({
+      success: false,
+      data: "",
+      message: "Error getting movie",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   createMovie,
+  deleteMovie,
+  getMovie,
 };
