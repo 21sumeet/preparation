@@ -28,7 +28,34 @@ const value = {
   name: "John",
   age: 25,
 };
-
 const copy = value;
 copy.name = "Doe";
 console.log("original value name:", value.name); // Output : Doe : because both value and copy are pointing to same memory location
+
+//make deep copy function with array and nested objects
+function deepClone(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return obj; // Return the value if obj is not an object
+  }
+
+  const clone = Array.isArray(obj) ? [] : {};
+  for (const key in obj) {
+    clone[key] = deepClone(obj[key]);
+  }
+  return clone;
+}
+const original = {
+  name: "Eve",
+  hobbies: ["reading", "traveling"],
+  address: {
+    city: "Miami",
+    zip: 33101,
+  },
+};
+const cloned = deepClone(original);
+cloned.hobbies.push("swimming");
+cloned.address.city = "Orlando";
+console.log("original hobbies:", original.hobbies); // Output: ["reading", "traveling"]
+console.log("original address city:", original.address.city); // Output: Miami
+console.log("cloned hobbies:", cloned.hobbies); // Output: ["reading", "traveling", "swimming"]
+console.log("cloned address city:", cloned.address.city); // Output: Orlando
