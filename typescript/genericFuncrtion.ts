@@ -11,3 +11,11 @@ console.log(result);  // Outputs: 1
 const ranks = getFirstele(["gold", "silver", "bronze"]);
 console.log(ranks);  // Outputs: gold
 
+
+//multiple generic parameters
+function mergeObjects<T, U>(obj1: T, obj2: U): T & U {
+    return { ...obj1, ...obj2 };
+}
+const merged = mergeObjects({ name: "Alice" }, { age: 30 });
+console.log(merged);  // Outputs: { name: 'Alice', age: 30 }
+
