@@ -19,3 +19,26 @@ function mergeObjects<T, U>(obj1: T, obj2: U): T & U {
 const merged = mergeObjects({ name: "Alice" }, { age: 30 });
 console.log(merged);  // Outputs: { name: 'Alice', age: 30 }
 
+
+//real world example
+interface User {
+    id: number;
+    name: string;
+}
+
+interface Product {
+    id: number;
+    title: string;
+    price: number;  
+}
+function getEntityById<T extends { id: number }>(entities: T[], id: number): T | undefined {
+    return entities.find(entity => entity.id === id);
+}   
+const users: User[] = [
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" }
+];
+const user = getEntityById(users, 1);
+console.log(user);  // Outputs: { id: 1, name: 'Alice' }
+
+
