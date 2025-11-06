@@ -12,3 +12,20 @@ function get2ndLargestNumber(arr) {
 }
 console.log(get2ndLargestNumber([3, 5, 1, 4, 2])); // 4
 //time complexity: O(n log n) due to sorting
+
+//Optimized approach: single pass to find the largest and 2nd largest
+function get2ndLargestNumberOptimized(arr) {
+  let first = -Infinity;
+  let second = -Infinity;
+  for (let num of arr) {
+    if (num > first) {
+      second = first;
+      first = num;
+    } else if (num > second && num < first) {
+      second = num;
+    }
+  }
+  return second;
+}
+console.log(get2ndLargestNumberOptimized([3, 5, 1, 4, 2])); // 4
+//time complexity: O(n)
