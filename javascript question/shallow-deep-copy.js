@@ -37,7 +37,6 @@ function deepClone(obj) {
   if (obj === null || typeof obj !== "object") {
     return obj; // Return the value if obj is not an object
   }
-
   const clone = Array.isArray(obj) ? [] : {};
   for (const key in obj) {
     clone[key] = deepClone(obj[key]);
