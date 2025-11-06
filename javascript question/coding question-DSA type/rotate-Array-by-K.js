@@ -35,3 +35,4 @@ function reverse(subArr, start, end) {
 }
 console.log(rotateArrayByKOptimized([1, 2, 3, 4, 5], 2)); // [4,5,1,2,3]
 console.log(rotateArrayByKOptimized([-1, -100, 3, 99], 2)); // [3,99,-1,-100]
+//time complexity: O(n)
