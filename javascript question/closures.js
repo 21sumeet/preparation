@@ -13,3 +13,13 @@ const closureFunction = outerFunction(); // outerFunction returns innerFunction
 closureFunction(); // Output: Current value: 1
 closureFunction(); // Output: Current value: 2
 closureFunction(); // Output: Current value: 3  // why ? because closureFunction retains access to 'value' variable
+
+// Another Example
+function adder(x) {
+  return function (y) {
+    return x + y; // inner function accessing outer function parameter
+  };
+}
+const add5 = adder(5); // returns a function that adds 5 to its argument
+console.log(add5(10)); // Output: 15
+console.log(add5(20)); // Output: 25
