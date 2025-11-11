@@ -21,3 +21,19 @@ const filterArr = arrOfObj.filter((obj) => {
   return obj.hasOwnProperty("gender");
 });
 console.log(filterArr);
+
+//check if all element in array are number
+const mixedArr = [1, 2, 3, "4", 5];
+const allNumbers = mixedArr.every((item) => typeof item === "number");
+console.log(allNumbers); // Output: false
+
+//another way
+function areAllNumbers(arr) {
+  for (let item of arr) {
+    if (typeof item !== "number") {
+      return false;
+    }
+  }
+  return true;
+}
+console.log(areAllNumbers(mixedArr)); // Output: false
