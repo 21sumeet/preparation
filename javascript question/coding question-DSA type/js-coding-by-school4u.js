@@ -37,3 +37,21 @@ function areAllNumbers(arr) {
   return true;
 }
 console.log(areAllNumbers(mixedArr)); // Output: false
+
+// isPrime number
+function isPrime(num) {
+  if (num <= 1) return false;
+  for (let i = 2; i <= Math.sqrt(num); i++) {
+    if (num % i === 0) return false;
+  }
+  return true;
+}
+console.log(isPrime(11)); // Output: true
+console.log(isPrime(15)); // Output: false
+
+// remove duplicates from array
+const arrayWithDuplicates = [1, 2, 2, 3, 4, 4, 5];
+const uniqueArr = [...new Set(arrayWithDuplicates)];
+console.log(uniqueArr); // Output: [1, 2, 3, 4, 5]
+// time complexity : O(n)
+// space complexity : O(n)
