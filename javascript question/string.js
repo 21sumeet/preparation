@@ -26,3 +26,9 @@ const anotherStr = "JavaScript is awesome";
 console.log(anotherStr.substring(0, 10)); // Output: "JavaScript"
 console.log(anotherStr.substring(13)); // Output: "awesome"
 console.log(anotherStr.slice(13, -1)); // Output: "awesome"
+
+//ascii value
+console.log("A" === "a"); // false ....bcoz case sensitive and have different ascii values
+console.log("A".charCodeAt(0)); // Output: 65
+console.log("a".charCodeAt(0)); // Output: 97
+console.log(String.fromCharCode(65)); // Output: "A"
