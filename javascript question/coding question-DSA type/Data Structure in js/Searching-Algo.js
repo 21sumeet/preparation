@@ -25,3 +25,22 @@ function globallinearsearch(arr, target) {
 }
 console.log(globallinearsearch([10, 20, 30, 40, 30, 50], 30)); // Output: [2, 4]
 //time complexity O(n)   space complexity O(n)
+
+// Binary Search (array must be sorted)
+function Binarysearch(array, target) {
+  let left = 0;
+  let right = array.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (array[mid] === target) {
+      return mid;
+    } else if (array[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+  return -1;
+}
+console.log(Binarysearch(arr, 40)); // Output: 3
+//time complexity O(log n)   space complexity O(1)
