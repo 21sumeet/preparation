@@ -27,20 +27,21 @@ function freq(str) {
 }
 console.log(freq("programing"));
 
-// function nonrepeat(str) {
-//    let charfreq ={};
-//     for(let char of str){
-//         if (charfreq[char]) {
-//             charfreq[char]++;
-//         }else{
-//             charfreq[char]=1;
-//         }
-//     }
-//     console.log(charfreq);
-//     for (let char of str) {
-//         if(charfreq[char]==1){
-//             console.log(char);
-//         }
-//     }
-// }
-// nonrepeat("level")
+//non repeating value from string
+function nonrepeat(str) {
+  let charfreq = {};
+  for (let char of str) {
+    if (charfreq[char]) {
+      charfreq[char]++;
+    } else {
+      charfreq[char] = 1;
+    }
+  }
+  console.log(charfreq);
+  for (let char of str) {
+    if (charfreq[char] == 1) {
+      console.log(char);
+    }
+  }
+}
+nonrepeat("level");
