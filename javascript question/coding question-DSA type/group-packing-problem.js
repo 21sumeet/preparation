@@ -1,4 +1,12 @@
 //Bin packing problem
+// Problem:
+// We have a list of orders, and each order has a weight.
+// One delivery van can carry a maximum of 100 kg.
+// We need to group the orders into vans so that:
+// 1) No van exceeds 100 kg.
+// 2) Every order is used exactly once.
+// 3) The total number of vans used is as small as possible.
+// The goal is to return an array of vans, where each van contains the orders assigned to it
 
 function groupOrders(orders) {
   // sort by weight descending
