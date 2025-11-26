@@ -1,5 +1,5 @@
-// Online Javascript Editor for free
-// Write, Edit and Run your Javascript code using JS Online Compiler
+//merge sort
+//time complexity O(n log n) and space complexity O(n)
 function merge(left, right) {
   let sortedArr = [];
   let i = 0,
