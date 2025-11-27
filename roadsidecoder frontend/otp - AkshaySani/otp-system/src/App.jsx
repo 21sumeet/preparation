@@ -39,19 +39,21 @@ function App() {
     <>
       <div className="app">
         <h4>Otp system </h4>
-        {otpinput.map((item, index) => {
-          return (
-            <input
-              className="otp-input-box"
-              key={index}
-              value={otpinput[index]}
-              ref={(item) => (refArr.current[index] = item)} // Assigning ref to each input box
-              onChange={(e) => handleOnChange(e.target.value, index)}
-              onKeyDown={(e) => handlekeyDown(e, index)}
-              type="text"
-            />
-          );
-        })}
+        <div className="otp-input-row">
+          {otpinput.map((item, index) => {
+            return (
+              <input
+                className="otp-input-box"
+                key={index}
+                value={otpinput[index]}
+                ref={(item) => (refArr.current[index] = item)} // Assigning ref to each input box
+                onChange={(e) => handleOnChange(e.target.value, index)}
+                onKeyDown={(e) => handlekeyDown(e, index)}
+                type="text"
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );

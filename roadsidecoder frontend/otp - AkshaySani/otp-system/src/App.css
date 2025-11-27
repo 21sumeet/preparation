@@ -1,14 +1,61 @@
-.otp-input-box{
-  width: 40px;
-  height: 40px;
-  font-size: 24px;
-  text-align: center;
-  margin: 0 5px;
-}
-.app{
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+/* App container: center everything, allow wrapping */
+.app {
+  width: 100%;
   height: 100vh;
+  display: flex;            /* use flex row */
+  flex-wrap: wrap;         /* allow children to wrap to next line */
+  justify-content: center; /* center horizontally */
+  align-items: center;     /* center vertically */
+  gap: 18px;
+  background: #f6f7fb;
+  font-family: system-ui, sans-serif;
+  padding: 30px;           /* keep some breathing room on small screens */
+}
+
+/* Make the heading take the full width so inputs appear on the next line */
+.app h4 {
+  flex-basis: 100%; /* forces the heading to occupy full row */
+  text-align: center;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Row of inputs will sit on the next wrapped line and be centered */
+.otp-input-row {
+  /* optional class — see note below */
+}
+
+/* OTP Input Boxes */
+.otp-input-box {
+  width: 50px;
+  height: 55px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 8px;
+  outline: none;
+  border: 2px solid #d2d6e0;
+  background: white;
+  transition: all 0.15s ease;
+  margin: 0 6px;
+  box-sizing: border-box;
+}
+
+/* On Focus */
+.otp-input-box:focus {
+  border-color: #4a7bff;
+  box-shadow: 0 0 6px rgba(74, 123, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+/* Small screens: shrink boxes and allow wrapping gracefully */
+@media (max-width: 420px) {
+  .otp-input-box {
+    width: 44px;
+    height: 50px;
+    font-size: 20px;
+    margin: 0 4px;
+  }
 }
