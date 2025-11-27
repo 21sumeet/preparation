@@ -1,0 +1,14 @@
+.otp-input-box{
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  text-align: center;
+  margin: 0 5px;
+}
+.app{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
