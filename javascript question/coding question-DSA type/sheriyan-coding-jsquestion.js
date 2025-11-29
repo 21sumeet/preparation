@@ -86,3 +86,62 @@ function genderbais(arr) {
   return newarr;
 }
 console.log(genderbais(array));
+
+//deep clone of object
+const originalObj = {
+  name: "John",
+  age: 30,
+  address: {
+    city: "Mumbai",
+    pincode: 400001,
+  },
+  hobbies: ["reading", "gaming"],
+};
+function deepclone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+const clonedObj = deepclone(originalObj);
+clonedObj.address.city = "Delhi"; // Doesn't affect original
+
+console.log(originalObj.address.city); // "Mumbai"
+console.log(clonedObj.address.city); // "Delhi"
+
+//print last n element from arr
+function lastNele(arr, n = 1) {
+  if (arr.length > n) {
+    for (let i = 0; i < n; i++) {
+      console.log(arr[arr.length - 1 - i]);
+    }
+  }
+}
+lastNele([1, 2, 4, 6, 8, 7], 3);
+
+//most freq item of arr
+let map = new Map();
+function mostfreqitem(arr) {
+  let map = new Map();
+  for (item of arr) {
+    if (map.has(item)) {
+      map.set(item, map.get(item) + 1);
+    } else {
+      map.set(item, 1);
+    }
+  }
+  let maxCount = 0;
+  let mostFrequentItem = null;
+  for (let [item, count] of map) {
+    if (count > maxCount) {
+      maxCount = count;
+      mostFrequentItem = item;
+    }
+  }
+  return { item: mostFrequentItem, frequency: maxCount };
+}
+console.log(mostfreqitem([1, 2, 2, 5, 5, 2, 5, 7]));
+
+//union of 2 arr
+function union(arr1, arr2) {
+  let unionSet = new Set([...arr1, ...arr2]);
+  return Array.from(unionSet).sort((a, b) => a - b);
+}
+console.log(union([1, 2, 3], [100, 2, 5])); // 1 ,2,3,5,100
