@@ -57,3 +57,32 @@ function frequency(str) {
   console.log(map);
 }
 console.log(frequency("bumblebee"));
+
+//add only number from arr of fix string and number
+let arr = ["ad", 21, "dsvfv", 45, "sdf", 18];
+function addnumber(arr) {
+  let sum = 0;
+  arr.forEach(function (ele) {
+    if (typeof ele === "number") sum = sum + ele;
+  });
+  return sum;
+}
+console.log(addnumber(arr));
+
+//remove object from arr whos gender is not male , return new arr
+var array = [
+  { name: "knight", gender: "male" },
+  { name: "golem", gender: "male" },
+  { name: "pekka", gender: "female" },
+  { name: "healer", gender: "female" },
+];
+function genderbais(arr) {
+  let newarr = [];
+  for (var obj of arr) {
+    if (obj.gender == "male") {
+      newarr.push(obj);
+    }
+  }
+  return newarr;
+}
+console.log(genderbais(array));
