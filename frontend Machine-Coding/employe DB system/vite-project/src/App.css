@@ -1,0 +1,17 @@
+
+.employee-card{
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 6px;
+  box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+}
+.information{
+  width: 50%;
+}
+.container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
