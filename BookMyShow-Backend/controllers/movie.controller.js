@@ -76,8 +76,33 @@ const getMovie = async (req, res) => {
   }
 };
 
+const updateMovie = async (req, res) => {
+  try {
+    const movie = await MovieModel.findByIdAndUpdate(
+      req.params.movieId,
+      req.body,
+      { new: true }
+    );
+    return res.status(200).json({
+      success: true,
+      data: movie,
+      message: "Movie created successfully",
+      error: null,
+    });
+  } catch (error) {
+    console.log("error at updating movie", error);
+    return res.status(500).json({
+      success: false,
+      data: "",
+      message: "Error updating movie",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createMovie,
   deleteMovie,
   getMovie,
+  updateMovie,
 };
