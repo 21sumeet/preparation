@@ -1,0 +1,53 @@
+.main-label {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+/* Each row: label + input */
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.profile-field input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border 0.2s ease;
+}
+
+.profile-field input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+.next-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #095c1d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.hobbies-input{
+    
+}
