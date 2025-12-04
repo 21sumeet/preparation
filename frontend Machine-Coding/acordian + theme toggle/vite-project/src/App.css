@@ -1,0 +1,36 @@
+.accordion-container {
+  background-color: rgb(123, 123, 234);
+  width: 500px;
+  margin: 60px auto;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.accordion-item {
+  margin-bottom: 15px;
+}
+
+.accordion-question {
+  background-color: rgb(57, 57, 182);
+  border-radius: 6px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+}
+
+.accordion-answer {
+  background-color: rgb(28, 28, 99);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 6px;
+  color: white;
+
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.accordion-answer.open {
+  max-height: 200px; 
+}
+
