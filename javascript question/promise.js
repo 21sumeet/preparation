@@ -99,3 +99,6 @@ Promise.all(userPromises)
   .catch((error) => {
     console.log("Failed to fetch users:", error);
   });
+
+console.log("----------------------------------------------------------");
+//output based question
