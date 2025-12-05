@@ -5,10 +5,20 @@ const {
   updateMovie,
 } = require("../controllers/movie.controller");
 
+const movieMiddlewares = require("../middlewares/movie.middleware");
+
 const routes = (app) => {
-  app.post("/mba/api/v1/movies", createMovie);
+  app.post(
+    "/mba/api/v1/movies",
+    movieMiddlewares.validateMovieCreateRequest,
+    createMovie
+  );
   app.delete("/mba/api/v1/movies/:movieId", deleteMovie);
   app.get("/mba/api/v1/movies/:movieId", getMovie);
-  app.put("/mba/api/v1/movies/:movieId", updateMovie);
+  app.put(
+    "/mba/api/v1/movies/:movieId",
+    movieMiddlewares.validateMovieCreateRequest,
+    updateMovie
+  );
 };
 module.exports = routes;
