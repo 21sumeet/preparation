@@ -1,0 +1,28 @@
+.dragdrop-container{
+
+    width: 400px;
+    height: 400px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.dragdrop-input{
+    display: none;
+}
+.dragdrop-label{
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
