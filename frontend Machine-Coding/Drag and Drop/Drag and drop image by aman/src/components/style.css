@@ -26,3 +26,26 @@
     cursor: pointer;
     font-size: 16px;
 }
+.preview{
+    display:  flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-left: 40px;
+
+}
+.preview button{
+    background-color: red;
+    color: white;
+    width: 100px;
+    height: 30px;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.preview img{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 5px;
+}

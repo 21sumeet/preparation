@@ -11,6 +11,9 @@ const DragandDrop = () => {
     console.log("File dropped");
     console.log(selectedFiles);
   }
+  function onDeleteFile(index) {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  }
 
   return (
     <div>
@@ -36,7 +39,11 @@ const DragandDrop = () => {
         <h4>Uploaded Files:</h4>
         {files.map((file, index) => (
           <div key={index}>
-            <PreviewFiles />
+            <PreviewFiles
+              index={index}
+              file={file}
+              onDeleteFile={onDeleteFile}
+            />
           </div>
         ))}
       </div>
