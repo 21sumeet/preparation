@@ -4,6 +4,7 @@ import PreviewFiles from "./PreviewFiles";
 
 const DragandDrop = () => {
   const [files, setFiles] = useState([]);
+  const [isdraging, setdraging] = useState(false);
 
   function onhandlechange(event) {
     const selectedFiles = Array.from(event.target.files);
@@ -11,15 +12,37 @@ const DragandDrop = () => {
     console.log("File dropped");
     console.log(selectedFiles);
   }
+
   function onDeleteFile(index) {
     setFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    setdraging(true);
+  }
+
+  function handleDragLeave() {
+    setdraging(false);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    setdraging(false);
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    setFiles((prev) => [...prev, ...droppedFiles]);
   }
 
   return (
     <div>
       <h3>Drag and Drop Image Upload Component</h3>
 
-      <div className="dragdrop-container">
+      <div
+        className={`dragdrop-container ${isdraging ? "highlight" : ""}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <h5>Drag and Drop file here</h5>
 
         <label htmlFor="dragdrop-input" className="dragdrop-label">
@@ -38,13 +61,12 @@ const DragandDrop = () => {
       <div>
         <h4>Uploaded Files:</h4>
         {files.map((file, index) => (
-          <div key={index}>
-            <PreviewFiles
-              index={index}
-              file={file}
-              onDeleteFile={onDeleteFile}
-            />
-          </div>
+          <PreviewFiles
+            key={index}
+            index={index}
+            file={file}
+            onDeleteFile={onDeleteFile}
+          />
         ))}
       </div>
     </div>
