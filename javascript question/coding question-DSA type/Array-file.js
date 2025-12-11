@@ -46,3 +46,89 @@ function unionofarrs(arr1, arr2) {
   return [...new Set([...arr1, ...arr2])].sort();
 }
 console.log(unionofarrs(simplearr, arr2));
+
+//intersection of 2 sorted arrays
+function intersectionSorted(arr1 , arr2){
+    let i =0 , j=0;
+    let result =[];
+     while (i < arr1.length && j < arr2.length) {
+        if (arr1[i] === arr2[j]) {
+            result.push(arr1[i]);
+            i++;
+            j++;
+        } else if (arr1[i] < arr2[j]) {
+            i++;
+        } else {
+            j++;
+        }
+    }
+    
+    return result;
+}
+console.log(intersectionSorted([1, 2, 3, 4], [3, 4, 5, 6])); // [3, 4]
+
+
+//missing Number
+function missingNumber(arr){
+  let sum = arr.reduce((acc , val)=>acc+val , 0)
+  let n = arr.length;
+  n = (n*(n+1))/2;
+  return n - sum ||sum -n
+}
+console.log(missingNumber([0,1,3]))
+
+//maximum consecutive 1's in arr
+function maxOne(arr){
+  let count =0,max=0;
+  for(let num of arr){
+    if(num==1){
+      count++;
+    }
+    if(count > max){
+      max = count
+    }
+    if(num!=1){
+      count =0
+    }
+  }
+  return max;
+}
+console.log(maxOne([0,1,2,3,1,1,1,4]))
+
+//maximum of subarray-   leetcode 53
+function maxSubArray(nums) {
+    let maxSoFar = nums[0];
+    let currentMax = nums[0];
+    
+    for(let i = 1; i < nums.length; i++) {
+        // Either extend the current subarray or start new
+        currentMax = Math.max(nums[i], currentMax + nums[i]);
+        maxSoFar = Math.max(maxSoFar, currentMax);
+    }
+    
+    return maxSoFar;
+}
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4])); // 6
+
+//rearrange array by sign -leetcode 2149
+function rearrangeArray(nums) {
+    let positives = [];
+    let negatives = [];
+    // Separate positives and negatives
+    for(let num of nums) {
+        if(num > 0) {
+            positives.push(num);
+        } else {
+            negatives.push(num);
+        }
+    }
+    let result = [];
+    for(let i = 0; i < positives.length; i++) {
+        result.push(positives[i]);
+        result.push(negatives[i]);
+    }
+    
+    return result;
+}
+console.log(rearrangeArray([3,1,-2,-5,2,-4])); // [3,-2,1,-5,2,-4]
+
