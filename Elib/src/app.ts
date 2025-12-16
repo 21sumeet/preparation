@@ -1,11 +1,16 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import type { HttpError } from "http-errors";
 import { config } from "../config/config.ts";
+
 const app = express();
+app.use(express.json());
+import Userrouter from "../user/userRoute.ts";
 
 app.get("/", (req , res)=>{
     res.json({message:"hello from ebook api backend"})
 })
+app.use("/api/user" , Userrouter);
+
 
 
 //global error handler
