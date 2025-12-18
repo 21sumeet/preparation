@@ -1,34 +1,68 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import createHttpError from "http-errors";
 import userModel from "./userModel.ts";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+//import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+const { sign } = jwt;
+import { config } from "../config/config.ts";
 
+const createuser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name, email, password, age } = req.body;
 
-const createuser = async(req:Request , res:Response , next:NextFunction)=>{
-    //validation 
-    const {name , email , password , age} = req.body;
-    if(!name || !email || !password ||!age){
-        const error = createHttpError(400 , "All field is required ");
-        return next(error);
+    // validation
+    if (!name || !email || !password || !age) {
+      return next(createHttpError(400, "All fields are required"));
     }
-    const user = await userModel.findOne({email : email});
-    if(user){
-        const error = createHttpError(400 , "user already exist ");
-        return next(error);
+
+    // check existing user
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return next(
+        createHttpError(409, "User already exists with this email")
+      );
     }
-    //creating newuser
-    const hashpassword =  await bcrypt.hash(password , 10);
-    const newuser = await userModel.create({
-        name ,
-        email ,
-        password : hashpassword,
-        age
-    })
-    res.json({
-        id:newuser._id,
-        message :  `${newuser.name} is created`
-    })
 
-}
+    // hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-export {createuser};
+    // create user
+    const newUser = await userModel.create({
+      name,
+      email,
+      password: hashedPassword,
+      age
+    });
+
+    // generate JWT
+    const token = sign(
+      { sub: newUser._id.toString() },
+      config.jwtSecret as string,
+      {
+        expiresIn: "7d",
+        algorithm: "HS256"
+      }
+    );
+
+    // send response
+    res.status(201).json({
+      message: "User created successfully",
+      accessToken: token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        age: newUser.age
+      }
+    });
+  } catch (error) {
+    next(createHttpError(500, "Error while creating user"));
+  }
+};
+
+export { createuser };
