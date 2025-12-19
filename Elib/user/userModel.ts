@@ -1,11 +1,11 @@
 import mongoose,  { Document } from "mongoose";
 
 interface User{
-    _id :String ,
-    name : String ,
-    email : String,
-    password :String,
-    age:Number
+    _id :string ,
+    name : string ,
+    email : string,
+    password :string,
+    age:number
 }
 
 const userSchema = new mongoose.Schema<User>({

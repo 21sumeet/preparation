@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const { sign } = jwt;
 import { config } from "../config/config.ts";
+import { match } from "assert";
 
 const createuser = async (
   req: Request,
@@ -65,4 +66,38 @@ const createuser = async (
   }
 };
 
-export { createuser };
+const loginuser = async(req: Request, res: Response, next: NextFunction)=>{
+  const { email , password} = req.body;
+  if(!email ||!password){
+    return next(createHttpError(400 , "All field are require "));
+  }
+
+  try {
+    const user = await userModel.findOne({email});
+  if(!user){
+    return next(createHttpError(404 , "User is not found."));
+  }
+
+  const isMatch = await bcrypt.compare(password , user.password)
+  if(!isMatch){
+    return next(createHttpError(400, "Username or password incorrect!"))
+  }
+  const token = sign({ sub: user._id }, config.jwtSecret as string, {
+    expiresIn: "7d",
+    algorithm: "HS256",
+  });
+  //res.json({ accessToken: token });
+  res.status(201).json({
+      message: "User logged successfully",
+      accessToken: token,
+      user: {
+        name: user.name,
+        email: user.email,
+      }
+    });
+  } catch (error) {
+    next(createHttpError(500, "Error while loging user"));
+  }
+}
+
+export { createuser , loginuser };
