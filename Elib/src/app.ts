@@ -3,6 +3,7 @@ import type { HttpError } from "http-errors";
 import { config } from "../config/config.ts";
 import { rateLimit } from "express-rate-limit";
 import Userrouter from "../user/userRoute.ts";
+import Bookrouter from "../book/bookRoute.ts";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.get("/", (req , res)=>{
     res.json({message:"hello from ebook api backend"})
 })
 app.use("/api/user" , Userrouter);
+app.use("/api/book" , Bookrouter)
 
 
 

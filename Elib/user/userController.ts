@@ -80,7 +80,7 @@ const loginuser = async(req: Request, res: Response, next: NextFunction)=>{
 
   const isMatch = await bcrypt.compare(password , user.password)
   if(!isMatch){
-    return next(createHttpError(400, "Username or password incorrect!"))
+    return next(createHttpError(400, "Usermail or password incorrect!"))
   }
   const token = sign({ sub: user._id }, config.jwtSecret as string, {
     expiresIn: "7d",
