@@ -4,7 +4,7 @@ import type { User } from "../user/userModel.ts";
 export interface Book{
     title :string , 
     description:string , 
-    author :User,
+    author :mongoose.Types.ObjectId,
     genre: string;
     coverImage: string;
     file: string;
@@ -15,30 +15,30 @@ export interface Book{
 const bookSchema = new mongoose.Schema<Book>({
     title :{
         type :String,
-        require : true
+        required : true
     },
     description:{
         type : String , 
-        require :true,
+        required :true,
         maxlength :[200 , "max length of description is 200"],
         minlength :[10 , "min length of description is 10 atleast"]
     },
     author :{
         type : mongoose.Schema.Types.ObjectId,
         ref:"User",
-        require :true,
+        required :true,
     },
     coverImage:{
         type :String,
-        require :true
+        required :true
     },
     file:{
         type :String,
-        require :true,
+        required :true,
     },
     genre:{
         type:String,
-        require:true,
+        required:true,
     }
 },{timestamps:true})
 

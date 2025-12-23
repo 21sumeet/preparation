@@ -11,7 +11,7 @@ export interface User{
 const userSchema = new mongoose.Schema<User>({
     name :{
         type : String,
-        require : [true , "name is required"] ,
+        required : [true , "name is required"] ,
         trim :true ,
         minlength : [2 , "minimum length of name should be at least 2"],
         maxlength :  [12 , "maximum length of name should be at most 12"],
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema<User>({
     email:{
         type :String,
         unique :true,
-        require :  [true , "email is required"] ,
+        required :  [true , "email is required"] ,
         lowercase: true,
         trim: true,
         match :[
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema<User>({
     },
     age:{
         type :Number,
-        require :true,
+        required :true,
         min: [10, "Age must be at least 13"],
        max: [120, "Age must be below 120"]
     }
