@@ -45,6 +45,7 @@ const createbook = async(req: Request, res: Response, next: NextFunction)=>{
       }
     });
     }catch(err){
+        console.log("CREATE BOOK ERROR:", err);
         next(createHttpError(500, "Error while creating books"));
     }
 }
