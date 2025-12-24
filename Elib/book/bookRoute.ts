@@ -5,8 +5,8 @@ import multer from "multer";
 const Bookrouter = express.Router();
 
 const upload = multer({
-    dest:"../../public/data/uploads",
-    limits: { fileSize: 20 * 1024 * 1024 } // 20 MB limit
+    dest:path.join(process.cwd(), "public/data/uploads"),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit
 }).fields([
   { name: 'coverImage', maxCount: 1 },
   { name: 'file', maxCount: 2 }
