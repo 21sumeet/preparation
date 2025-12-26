@@ -1,6 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import path from "node:path";
-import { createbook } from "./bookController.ts";
+import { createbook, updatebook } from "./bookController.ts";
 import multer from "multer";
 const Bookrouter = express.Router();
 
@@ -12,6 +12,7 @@ const upload = multer({
   { name: 'file', maxCount: 2 }
 ])
 
-Bookrouter.post("/",upload ,createbook )
+Bookrouter.post("/",upload ,createbook );
+Bookrouter.put("/updatebook/:id", upload ,updatebook )
 
 export default Bookrouter;
