@@ -22,6 +22,11 @@ const createbook = async(req: Request, res: Response, next: NextFunction)=>{
         createHttpError(400, "Cover image and book file are required")
       );
     }
+    if(files.coverImage[0]==undefined ||files.file[0]==undefined){
+      return next(
+        createHttpError(400, "Cover image and book file are undefined")
+      );
+    }
      const coverImagePath = files.coverImage[0].path;
      const bookFilePath = files.file[0].path;
     
