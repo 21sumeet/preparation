@@ -1,7 +1,10 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import createHttpError from "http-errors";
 import Book from "./bookModel.ts";
-import bookModel from "./bookModel.ts";
+import mongoose from "mongoose";
+import fs from "node:fs";
+import type { AuthRequest } from "../middleware/authMiddleware.ts";
+
 
 const createbook = async(req: Request, res: Response, next: NextFunction)=>{
     try{
@@ -127,5 +130,37 @@ const getSingleBook = async(req: Request, res: Response, next: NextFunction)=>{
   }
 }
 
+const deletebook = async(req: Request, res: Response, next: NextFunction)=>{
+  const {id} = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
+      return next(createHttpError(400, "Invalid book id"));
+ }
+ try{
+  const book = await Book.findById(id);
+    if (!book) {
+      return next(createHttpError(404, "Book not found"));
+    }
+  const _req = req as AuthRequest;
+  if(book.author.toString()!==_req.userId){
+    createHttpError(403, "You are not allowed to delete this book")
+  }
+  if (book.coverImage && fs.existsSync(book.coverImage)) {
+      fs.unlinkSync(book.coverImage);
+    }
+    if (book.file && fs.existsSync(book.file)) {
+      fs.unlinkSync(book.file);
+    }
+    await Book.findByIdAndDelete(id);
 
-export {createbook ,updatebook , listBooks ,getSingleBook}
+    res.status(200).json({
+      message: "Book deleted successfully",
+    });
+ }catch(err){
+  console.log("DELETE BOOK ERROR:", err);
+  next(createHttpError(500, "Error while deleting book"));
+ }
+
+}
+
+
+export {createbook ,updatebook , listBooks ,getSingleBook ,deletebook}

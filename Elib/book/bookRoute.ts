@@ -1,6 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import path from "node:path";
-import { createbook, getSingleBook, listBooks, updatebook } from "./bookController.ts";
+import { createbook, deletebook, getSingleBook, listBooks, updatebook } from "./bookController.ts";
 import multer from "multer";
 import { authenticate } from "../middleware/authMiddleware.ts";
 const Bookrouter = express.Router();
@@ -18,5 +18,7 @@ Bookrouter.put("/updatebook/:id",authenticate , upload ,updatebook )
 
 Bookrouter.get("/", listBooks);
 Bookrouter.get("/:bookId", getSingleBook);
+
+Bookrouter.delete("/deletebook/:id",authenticate , deletebook)
 
 export default Bookrouter;
