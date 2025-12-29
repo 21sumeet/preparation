@@ -1,6 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import createHttpError from "http-errors";
 import Book from "./bookModel.ts";
+import bookModel from "./bookModel.ts";
 
 const createbook = async(req: Request, res: Response, next: NextFunction)=>{
     try{
@@ -102,4 +103,14 @@ const updatebook = async(req: Request, res: Response, next: NextFunction)=>{
   }
 }
 
-export {createbook ,updatebook}
+const listBooks = async(req: Request, res: Response, next: NextFunction)=>{
+  try {
+    const book = await Book.find();
+    res.json(book);
+  } catch (err) {
+     console.log("GET BOOKs ERROR:", err);
+      next(createHttpError(500, "Error while getting books"));
+  }
+}
+
+export {createbook ,updatebook , listBooks}
