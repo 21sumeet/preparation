@@ -1,5 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from"express";
 import type { HttpError } from "http-errors";
+import cors from "cors";
 import { config } from "../config/config.ts";
 import { rateLimit } from "express-rate-limit";
 import Userrouter from "../user/userRoute.ts";
@@ -7,6 +8,9 @@ import Bookrouter from "../book/bookRoute.ts";
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+    origin:config.frontend_url,
+}))
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
