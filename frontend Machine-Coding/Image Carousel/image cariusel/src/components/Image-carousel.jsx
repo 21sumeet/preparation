@@ -1,5 +1,6 @@
 import React from "react";
 import "./imagecarousel.css";
+import { useEffect } from "react";
 
 const images = [
   {
@@ -37,6 +38,16 @@ const Imagecarousel = () => {
       setCurrentIndex(0);
     }
   };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    // ✅ Cleanup
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className="container">
