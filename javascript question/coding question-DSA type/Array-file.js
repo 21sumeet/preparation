@@ -34,11 +34,36 @@ function movezerotoend(arr) {
 }
 console.log(movezerotoend(arr));
 
+//move zeros to end
+function zeroToEnd(arr) {
+  let result = [];
+  let zeros = 0;
+  for (let val of arr) {
+    if (val !== 0) {
+      result.push(val);
+    } else {
+      zeros++;
+    }
+  }
+  while (zeros--) {
+    result.push(0);
+  }
+  console.log(result);
+}
+zeroToEnd([1, 0, 3, 40, 0, 2, 0]); //[1, 3, 40, 2, 0, 0,  0]
+
 //left rotate arr by d places
 function leftrotatearr(arr, d) {
   return [...arr.slice(d), ...arr.slice(0, d)];
 }
 console.log(leftrotatearr(simplearr, 2)); // [3, 4, 5, 1, 2]
+
+//reverse array by d
+function reversebyK(arr, k) {
+  const result = arr.splice(k).concat(arr.splice(0, k));
+  console.log(result);
+}
+reversebyK([1, 2, 3, 4, 5], 2); //[ 3, 4, 5, 1, 2 ]
 
 //union of 2 arr
 let arr2 = [1, 4, 6, 7, 8, 9];
@@ -48,87 +73,99 @@ function unionofarrs(arr1, arr2) {
 console.log(unionofarrs(simplearr, arr2));
 
 //intersection of 2 sorted arrays
-function intersectionSorted(arr1 , arr2){
-    let i =0 , j=0;
-    let result =[];
-     while (i < arr1.length && j < arr2.length) {
-        if (arr1[i] === arr2[j]) {
-            result.push(arr1[i]);
-            i++;
-            j++;
-        } else if (arr1[i] < arr2[j]) {
-            i++;
-        } else {
-            j++;
-        }
+function intersectionSorted(arr1, arr2) {
+  let i = 0,
+    j = 0;
+  let result = [];
+  while (i < arr1.length && j < arr2.length) {
+    if (arr1[i] === arr2[j]) {
+      result.push(arr1[i]);
+      i++;
+      j++;
+    } else if (arr1[i] < arr2[j]) {
+      i++;
+    } else {
+      j++;
     }
-    
-    return result;
+  }
+
+  return result;
 }
 console.log(intersectionSorted([1, 2, 3, 4], [3, 4, 5, 6])); // [3, 4]
 
-
 //missing Number
-function missingNumber(arr){
-  let sum = arr.reduce((acc , val)=>acc+val , 0)
+function missingNumber(arr) {
+  let sum = arr.reduce((acc, val) => acc + val, 0);
   let n = arr.length;
-  n = (n*(n+1))/2;
-  return n - sum ||sum -n
+  n = (n * (n + 1)) / 2;
+  return n - sum || sum - n;
 }
-console.log(missingNumber([0,1,3]))
+console.log(missingNumber([0, 1, 3]));
 
 //maximum consecutive 1's in arr
-function maxOne(arr){
-  let count =0,max=0;
-  for(let num of arr){
-    if(num==1){
+function maxOne(arr) {
+  let count = 0,
+    max = 0;
+  for (let num of arr) {
+    if (num == 1) {
       count++;
     }
-    if(count > max){
-      max = count
+    if (count > max) {
+      max = count;
     }
-    if(num!=1){
-      count =0
+    if (num != 1) {
+      count = 0;
     }
   }
   return max;
 }
-console.log(maxOne([0,1,2,3,1,1,1,4]))
+console.log(maxOne([0, 1, 2, 3, 1, 1, 1, 4]));
 
 //maximum of subarray-   leetcode 53
 function maxSubArray(nums) {
-    let maxSoFar = nums[0];
-    let currentMax = nums[0];
-    
-    for(let i = 1; i < nums.length; i++) {
-        // Either extend the current subarray or start new
-        currentMax = Math.max(nums[i], currentMax + nums[i]);
-        maxSoFar = Math.max(maxSoFar, currentMax);
-    }
-    
-    return maxSoFar;
+  let maxSoFar = nums[0];
+  let currentMax = nums[0];
+
+  for (let i = 1; i < nums.length; i++) {
+    // Either extend the current subarray or start new
+    currentMax = Math.max(nums[i], currentMax + nums[i]);
+    maxSoFar = Math.max(maxSoFar, currentMax);
+  }
+
+  return maxSoFar;
 }
-console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4])); // 6
+console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // 6
 
 //rearrange array by sign -leetcode 2149
 function rearrangeArray(nums) {
-    let positives = [];
-    let negatives = [];
-    // Separate positives and negatives
-    for(let num of nums) {
-        if(num > 0) {
-            positives.push(num);
-        } else {
-            negatives.push(num);
-        }
+  let positives = [];
+  let negatives = [];
+  // Separate positives and negatives
+  for (let num of nums) {
+    if (num > 0) {
+      positives.push(num);
+    } else {
+      negatives.push(num);
     }
-    let result = [];
-    for(let i = 0; i < positives.length; i++) {
-        result.push(positives[i]);
-        result.push(negatives[i]);
-    }
-    
-    return result;
-}
-console.log(rearrangeArray([3,1,-2,-5,2,-4])); // [3,-2,1,-5,2,-4]
+  }
+  let result = [];
+  for (let i = 0; i < positives.length; i++) {
+    result.push(positives[i]);
+    result.push(negatives[i]);
+  }
 
+  return result;
+}
+console.log(rearrangeArray([3, 1, -2, -5, 2, -4])); // [3,-2,1,-5,2,-4]
+
+//remove falsely value from array
+function removefalsely(arr) {
+  const res = [];
+  for (let val of arr) {
+    if (val) {
+      res.push(val);
+    }
+  }
+  return res;
+}
+console.log(removefalsely([0, "", 1, 2, false, null, 3])); //[ 1, 2, 3 ]

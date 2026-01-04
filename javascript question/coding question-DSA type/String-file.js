@@ -214,3 +214,18 @@ console.log(isRotated("waterbottle", "erbottlewat"));
 //         if(str1.length()!=str2.length()) return false;
 //         return (str1 + str1).contains(str2);
 // }
+
+//revserse words , not charachter - javascript
+function reversewords(str) {
+  //simple way
+  console.log(str.split(" ").reverse().join(" "));
+
+  //different way
+  let words = str.split(" ");
+  let result = "";
+  for (let i = words.length - 1; i >= 0; i--) {
+    result += words[i] + " ";
+  }
+  console.log(result);
+}
+reversewords("hello world from sumeet"); //sumeet from world hello
