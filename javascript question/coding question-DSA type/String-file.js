@@ -229,3 +229,12 @@ function reversewords(str) {
   console.log(result);
 }
 reversewords("hello world from sumeet"); //sumeet from world hello
+// //java
+//  public static void reverse(String str){
+//         String[] words = str.split(" ");
+//          String result = "";
+//           for(int i = words.length - 1; i >= 0; i--) {
+//             result += words[i] + " ";
+//             }
+//         System.out.println(result.trim());
+//     }
