@@ -92,3 +92,55 @@ var mergeTwoLists = function (list1, list2) {
   if (list2 !== null) current.next = list2;
   return newhead;
 };
+
+// //detect cycle in linkelist- java
+// public boolean hasCycle(ListNode head) {
+//         if(head == null ) return false ;
+//         ListNode fast = head ;
+//         ListNode slow = head ;
+//         while (fast != null && fast.next != null){
+//             fast = fast.next.next ;
+//             slow = slow.next ;
+//             if(fast == slow ){
+//                 return true ;
+//             }
+//         }
+//         return false ;
+//     }
+var hasCycle = function (head) {
+  if (head == null) return false;
+  let fast = head;
+  let slow = head;
+  while (fast !== null && fast.next !== null) {
+    fast = fast.next.next;
+    slow = slow.next;
+    if (fast == slow) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// // remove duplicate in sorted linklist - java
+// public ListNode deleteDuplicates(ListNode head) {
+//         ListNode current = head;
+//         while(current!=null && current.next!=null){
+//             if(current.val ==current.next.val){
+//                 current.next=current.next.next;
+//             }else{
+//                 current = current.next;
+//             }
+//         }
+//         return head;
+//     }
+var deleteDuplicates = function (head) {
+  let current = head;
+  while (current !== null && current.next !== null) {
+    if (current.val === current.next.val) {
+      current.next = current.next.next;
+    } else {
+      current = current.next;
+    }
+  }
+  return head;
+};
