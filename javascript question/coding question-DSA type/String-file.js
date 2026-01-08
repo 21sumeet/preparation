@@ -238,3 +238,7 @@ reversewords("hello world from sumeet"); //sumeet from world hello
 //             }
 //         System.out.println(result.trim());
 //     }
+
+//split string 
+let languages ="java,python,c++;javascript";
+console.log(languages.split(/[,;]/));
