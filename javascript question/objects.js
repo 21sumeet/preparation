@@ -34,6 +34,39 @@ console.log(tree.treeinfoArrow()); // Output: Root: 10, Left Child: 5, Right Chi
 tree.insertvalue(20);
 console.log(tree.treeinfo()); // Output: Root: 20, Left Child: 5, Right Child: 15
 //-------------------------------------------------------------------------------------------------------------------------
+//print obj in such a way that values should be print simple without nexted loop
+const company = {
+    name : "tech company",
+    employee : 100,
+    department : {
+        role : "Software dev",
+        No_of_Employee_as_dev : 45,
+        task_status:{
+            frotnend_status :"done",
+            backend_status :"done",
+            QA_test_status:"pending"
+        }
+    }
+}
+function extract(obj){
+    for(key in obj){
+        if(typeof obj[key]=="object"){
+            extract(obj[key]);
+        }else{
+            console.log(key,":",obj[key]);
+        }
+    }
+}
+extract(company) 
+// //output:
+// name : tech company
+// employee : 100
+// role : Software dev
+// No_of_Employee_as_dev : 45
+// frotnend_status : done
+// backend_status : done
+// QA_test_status : pending
+//------------------------------------------------------------------------------------------------------
 //
 //
 //Call method - calling a function with a specific 'this' context
