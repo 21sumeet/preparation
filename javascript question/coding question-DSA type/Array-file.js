@@ -174,3 +174,17 @@ console.log(removefalsely([0, "", 1, 2, false, null, 3])); //[ 1, 2, 3 ]
 const array = [1, 4, "2", "3", 5, "21"];
 const sortedNumbers = array.map((item) => Number(item)).sort((a, b) => a - b);
 console.log(sortedNumbers); // [1, 2, 3, 4, 5, 21]
+
+//remove Element In-place
+const Array=[1 ,2,3,4];
+const remove = 3;
+function removeinplacevalue(arr , remove){
+    for(val of arr){
+        if(arr[val]===remove){
+            arr.splice(val , 1);
+            break;
+        }
+    }
+    return arr;
+}
+console.log(removeinplacevalue(Array,remove))
