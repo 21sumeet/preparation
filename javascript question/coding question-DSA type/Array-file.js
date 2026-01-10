@@ -188,3 +188,18 @@ function removeinplacevalue(arr , remove){
     return arr;
 }
 console.log(removeinplacevalue(Array,remove))
+
+//flatten array without using in built flat() 
+const arr5 = [1 ,2,3 ,[4 ,56 ,[100 , 300]]];
+function flatten(arr) {
+    let result = [];
+    for(let val of arr) {
+        if(Array.isArray(val)) {  
+            result = result.concat(flatten(val));
+        } else {
+            result.push(val);
+        }
+    }
+    return (result);
+}
+console.log(flatten(arr5))
