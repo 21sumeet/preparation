@@ -7,3 +7,8 @@ console.log(" " == true); // output : false
 
 console.log([] == []); // output : false
 //reason : Each [] creates a new array object in different memory locations, so they're different references
+
+console.log(null == undefined) //true bcoz both have falsey value 
+console.log(null===undefined) //false bcoz different typeof
+console.log(typeof null);  //object
+console.log(typeof undefined) //undefined
