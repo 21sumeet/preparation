@@ -34,6 +34,20 @@ console.log(tree.treeinfoArrow()); // Output: Root: 10, Left Child: 5, Right Chi
 tree.insertvalue(20);
 console.log(tree.treeinfo()); // Output: Root: 20, Left Child: 5, Right Child: 15
 //-------------------------------------------------------------------------------------------------------------------------
+//shallow copy vs reference
+const a ={};
+a.key = "key1";
+const b = {...a} //shallow copy
+b.key="key_id_1";
+console.log(a.key) //key1
+
+const a ={}; 
+a.key = "key1"; 
+const b = a; //object reference
+b.key="key_id_1"; 
+console.log(a.key) //key_id_1
+
+//-------------------------------------------------------------------------------------------------------------------------
 //print obj in such a way that values should be print simple without nexted loop
 const company = {
     name : "tech company",
