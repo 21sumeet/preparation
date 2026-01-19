@@ -92,6 +92,11 @@ function intersectionSorted(arr1, arr2) {
   return result;
 }
 console.log(intersectionSorted([1, 2, 3, 4], [3, 4, 5, 6])); // [3, 4]
+//another simeple way for interseaction 
+const arr1 =[1 ,2 ,3,4];
+const arr2 =[3,4,5,6];
+const intersection = arr1.filter(value => arr2.includes(value));
+console.log(intersection); // [3, 4]
 
 //missing Number
 function missingNumber(arr) {
