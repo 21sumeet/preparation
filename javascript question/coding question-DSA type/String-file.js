@@ -238,3 +238,26 @@ reversewords("hello world from sumeet"); //sumeet from world hello
 //             }
 //         System.out.println(result.trim());
 //     }
+
+//reverse words in sentence but place of words should not change
+let str ="my name is sumeet";
+function reverse(str){
+     return str.split(' ').map(word => {
+    return word.split('').reverse().join('');
+  }).join(' ');
+}
+console.log(reverse(str)) //ym eman si teemus
+// // java 
+// public static String reverseEachWord(String str) {
+//         String[] words = str.split(" ");
+//         StringBuilder result = new StringBuilder();
+//         for(String word :words){
+//             String reverseword = new StringBuilder(word).reverse().toString();
+//             result.append(reverseword).append(" ");
+//         }
+//         return result.toString().trim(); //ym eman si teemus
+//     }
+
+//split string 
+let languages ="java,python,c++;javascript";
+console.log(languages.split(/[,;]/));

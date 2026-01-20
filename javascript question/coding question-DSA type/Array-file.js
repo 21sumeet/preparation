@@ -92,6 +92,11 @@ function intersectionSorted(arr1, arr2) {
   return result;
 }
 console.log(intersectionSorted([1, 2, 3, 4], [3, 4, 5, 6])); // [3, 4]
+//another simeple way for interseaction 
+const arr1 =[1 ,2 ,3,4];
+const arr2 =[3,4,5,6];
+const intersection = arr1.filter(value => arr2.includes(value));
+console.log(intersection); // [3, 4]
 
 //missing Number
 function missingNumber(arr) {
@@ -174,3 +179,32 @@ console.log(removefalsely([0, "", 1, 2, false, null, 3])); //[ 1, 2, 3 ]
 const array = [1, 4, "2", "3", 5, "21"];
 const sortedNumbers = array.map((item) => Number(item)).sort((a, b) => a - b);
 console.log(sortedNumbers); // [1, 2, 3, 4, 5, 21]
+
+//remove Element In-place
+const Array=[1 ,2,3,4];
+const remove = 3;
+function removeinplacevalue(arr , remove){
+    for(val of arr){
+        if(arr[val]===remove){
+            arr.splice(val , 1);
+            break;
+        }
+    }
+    return arr;
+}
+console.log(removeinplacevalue(Array,remove))
+
+//flatten array without using in built flat() 
+const arr5 = [1 ,2,3 ,[4 ,56 ,[100 , 300]]];
+function flatten(arr) {
+    let result = [];
+    for(let val of arr) {
+        if(Array.isArray(val)) {  
+            result = result.concat(flatten(val));
+        } else {
+            result.push(val);
+        }
+    }
+    return (result);
+}
+console.log(flatten(arr5))
