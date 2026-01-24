@@ -8,7 +8,13 @@ console.log(" " == true); // output : false
 console.log([] == []); // output : false
 //reason : Each [] creates a new array object in different memory locations, so they're different references
 
+console.log(NaN === NaN);  //false
 console.log(null == undefined) //true bcoz both have falsey value 
 console.log(null===undefined) //false bcoz different typeof
 console.log(typeof null);  //object
-console.log(typeof undefined) //undefined
+console.log(typeof undefined) //undefined 
+
+
+console.log(0.1 + 0.2 === 0.3);  //false bcoz 3.0004
+console.log(0.3 + 0.1 ===0.4);  //true bcoz 0.4
+console.log(0.5 +0.3) //0.8
