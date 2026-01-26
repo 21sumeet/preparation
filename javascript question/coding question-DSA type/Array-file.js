@@ -194,6 +194,34 @@ function removeinplacevalue(arr , remove){
 }
 console.log(removeinplacevalue(Array,remove))
 
+
+//two sum problem
+const arr = [10, 12, 18, 6, 4];
+console.log(TwoSum(arr, 30));
+function twoSum(arr , target){
+    for(let i = 0; i < arr.length; i++) {
+        for(let j = i + 1; j < arr.length; j++) {
+            if(arr[i] + arr[j] === target) {
+                return [i, j];
+            }
+        }
+    }
+    return []
+}
+//using hashmap-more optimized
+function TwoSum(arr , target){
+    let map = new Map();
+    for(let i = 0; i < arr.length; i++) {
+        let complement = target - arr[i];
+        if(map.has(complement)) {
+            return [map.get(complement), i];
+        }
+        
+        map.set(arr[i], i);
+    }
+    return [];
+}
+
 //flatten array without using in built flat() 
 const arr5 = [1 ,2,3 ,[4 ,56 ,[100 , 300]]];
 function flatten(arr) {
