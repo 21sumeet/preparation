@@ -1,4 +1,36 @@
 //promsies in js
+//simple code for understanding callback vs promise
+//callback
+function add(a, b, callback) {
+    console.log(a + b);
+    callback();
+}
+add(10, 20, function() {
+    console.log("added");
+});
+// Output: 30, "added"
+
+//promise code
+function addPromise(a, b) {
+    return new Promise((resolve, reject) => {
+        if (typeof a !== 'number' || typeof b !== 'number') {
+            reject(new Error("Both arguments must be numbers"));
+        }  
+        const sum = a + b;
+        console.log(`Sum: ${sum}`);
+        resolve(sum);
+    });
+}
+addPromise(10, 20)
+    .then((sum) => {
+        console.log(`Addition completed: ${sum}`);
+    })
+    .catch((error) => {
+        console.error(`Error: ${error.message}`);
+    });
+
+// Output: "Sum: 30", "Addition completed: 30"
+//-----------------------------------------------------------------------------------------------
 
 //async code
 console.log("start");
