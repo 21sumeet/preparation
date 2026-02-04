@@ -28,3 +28,21 @@ function multiple(a, b, c) {
 }
 console.log(multiple(5, 2, 3));
 console.log(multiple(5)(2)(3));
+
+//example
+// Currency converter
+function convert(rate, amount) {
+    return amount * rate;
+}
+// Curried version
+function curriedConvert(rate) {
+    return function(amount) {
+        return amount * rate;
+    };
+}
+// Create specialized converters
+const usdToInr = curriedConvert(83);    // 1 USD = 83 INR
+const eurToInr = curriedConvert(89);    // 1 EUR = 89 INR
+
+console.log(usdToInr(100));  // 8300 (100 USD to INR)
+console.log(eurToInr(100));  // 8900 (100 EUR to INR)

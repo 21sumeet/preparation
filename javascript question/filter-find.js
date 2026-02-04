@@ -13,3 +13,8 @@ console.log(filteredusers);
 //find : it returns the first match
 const finduser = users.find((user) => user.age === 30);
 console.log(finduser);
+
+//Filter example on array
+const array = ["mumbai" , "delhi" , "pune" ,"metropolis"];
+const answer = array.filter((city)=>city[0]=='m');
+console.log(answer)
