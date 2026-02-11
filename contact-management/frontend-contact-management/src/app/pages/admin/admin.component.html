@@ -1,0 +1,96 @@
+<div class="admin-container">
+  <h2>Admin Dashboard</h2>
+
+  <!-- Stats -->
+  <div class="stats">
+    <mat-card class="stat-card">
+      <mat-icon>people</mat-icon>
+      <h3>{{ users.length }}</h3>
+      <p>Total Users</p>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-icon>contacts</mat-icon>
+      <h3>{{ contacts.length }}</h3>
+      <p>Total Contacts</p>
+    </mat-card>
+  </div>
+
+  <mat-tab-group>
+    <!-- Users Tab -->
+    <mat-tab label="Users">
+      <div class="table-container">
+        <table mat-table [dataSource]="users">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let user">{{ user.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="role-badge" [class.admin]="user.role === 'ADMIN'">
+                {{ user.role }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Joined</th>
+            <td mat-cell *matCellDef="let user">{{ user.createdAt | date:'mediumDate' }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <!-- Contacts Tab -->
+    <mat-tab label="All Contacts">
+      @if (loading) {
+        <p class="loading">Loading contacts...</p>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="contacts">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let contact">{{ contact.firstName }} {{ contact.lastName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let contact">{{ contact.email || '-' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef>Phone</th>
+              <td mat-cell *matCellDef="let contact">{{ contact.phone }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="owner">
+  <th mat-header-cell *matHeaderCellDef>Created By</th>
+  <td mat-cell *matCellDef="let contact">{{ getOwnerName(contact.userId) }}</td>
+</ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let contact">
+                <button mat-icon-button color="warn" (click)="deleteContact(contact.id, contact.firstName)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="contactColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: contactColumns;"></tr>
+          </table>
+        </div>
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>

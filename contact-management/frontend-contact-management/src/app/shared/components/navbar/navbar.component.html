@@ -1,0 +1,63 @@
+<mat-toolbar color="primary">
+  <span class="logo" routerLink="/" style="cursor: pointer;">📇 Contact Manager</span>
+
+  <span class="spacer"></span>
+
+  @if (authService.isLoggedIn()) {
+    <!-- Contacts Tab -->
+    <a 
+      mat-button 
+      routerLink="/contacts" 
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >
+      <mat-icon>contacts</mat-icon> Contacts
+    </a>
+
+    <!-- Admin Tab (only for admin) -->
+    @if (authService.isAdmin()) {
+      <a 
+        mat-button 
+        routerLink="/admin" 
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>admin_panel_settings</mat-icon> Admin
+      </a>
+    }
+
+    <!-- User Name -->
+    <span class="user-info">
+      <mat-icon>person</mat-icon>
+      {{ authService.currentUser()?.name }}
+      <span class="role-badge">{{ authService.currentUser()?.role }}</span>
+    </span>
+
+    <!-- Logout Button -->
+    <button 
+      mat-button 
+      class="logout-btn"
+      (click)="logout()"
+    >
+      <mat-icon>logout</mat-icon> Logout
+    </button>
+  } @else {
+    <!-- Login Tab -->
+    <a 
+      mat-button 
+      routerLink="/login" 
+      routerLinkActive="active-link"
+    >
+      Login
+    </a>
+
+    <!-- Register Tab -->
+    <a 
+      mat-button 
+      routerLink="/register" 
+      routerLinkActive="active-link"
+    >
+      Register
+    </a>
+  }
+</mat-toolbar>

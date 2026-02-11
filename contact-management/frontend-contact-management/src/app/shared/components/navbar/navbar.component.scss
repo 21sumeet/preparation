@@ -1,0 +1,95 @@
+mat-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+// Navigation links
+a[mat-button] {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  padding: 5px 15px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+// ✅ Active link styling — THIS IS THE KEY PART
+.active-link {
+  background: rgb(143, 137, 217); 
+  font-weight: 600;
+
+  // Bottom indicator line
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    //background-color: rgb(88, 76, 219);
+    border-radius: 3px 3px 0 0;
+  }
+}
+
+// User info section
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 8px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+// Role badge (USER / ADMIN)
+.role-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Logout button
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  padding: 5px 15px;
+  transition: all 0.2s ease;
+  color: white;
+
+  &:hover {
+    background: rgba(220, 38, 38, 0.8) !important;
+  }
+}
+
+// Hover effect for all nav buttons
+a[mat-button]:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

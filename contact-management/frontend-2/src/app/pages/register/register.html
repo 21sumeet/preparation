@@ -1,0 +1,138 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-icon">📝</div>
+      <h2>Create Account</h2>
+      <p class="subtitle">Fill in your details to get started</p>
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="error-box">
+        ⚠️ {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Register Form -->
+    <form (ngSubmit)="onSubmit()">
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="John Doe"
+          [class.error]="errorMessage && !name"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="you@example.com"
+          [class.error]="errorMessage && !email"
+          autocomplete="email"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Create a strong password"
+            [class.error]="errorMessage && !password"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="showPassword = !showPassword"
+          >
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+
+        <!-- Password Strength Bar -->
+        @if (password) {
+          <div class="password-strength">
+            <div class="strength-bar">
+              <div 
+                class="strength-fill"
+                [class]="getPasswordStrength()"
+              ></div>
+            </div>
+            <span class="strength-text" [class]="getPasswordStrength()">
+              {{ getPasswordStrength() | titlecase }} password
+            </span>
+          </div>
+
+          <div class="password-rules">
+            <span [class.valid]="password.length >= 8">✓ 8+ characters</span>
+            <span [class.valid]="hasUppercase()">✓ Uppercase (A-Z)</span>
+            <span [class.valid]="hasLowercase()">✓ Lowercase (a-z)</span>
+            <span [class.valid]="hasNumber()">✓ Number (0-9)</span>
+            <span [class.valid]="hasSpecial()">✓ Special (!@#$)</span>
+          </div>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-wrapper">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            [class.error]="confirmPassword && password !== confirmPassword"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="showConfirmPassword = !showConfirmPassword"
+          >
+            {{ showConfirmPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        @if (confirmPassword && password !== confirmPassword) {
+          <span class="error-message">Passwords do not match</span>
+        }
+        @if (confirmPassword && password === confirmPassword) {
+          <span class="success-message">✓ Passwords match</span>
+        }
+      </div>
+
+      <button
+        class="submit-btn"
+        type="submit"
+        [disabled]="loading"
+      >
+        {{ loading ? '⏳ Creating account...' : '→ Create Account' }}
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>or</span>
+    </div>
+
+    <!-- Login Link -->
+    <p class="auth-link">
+      Already have an account? <a routerLink="/login">Login here</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<p>contact-form works!</p>
+<div class="form-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2>{{ isEditMode ? '✏️ Edit Contact' : '➕ Add New Contact' }}</h2>
+    <a routerLink="/contacts" class="btn btn-secondary">← Back to Contacts</a>
+  </div>
+
+  <div class="form-card card">
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading contact...</p>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="error-box">⚠️ {{ errorMessage }}</div>
+    }
+
+    <!-- Contact Form -->
+    @if (!loading) {
+      <form (ngSubmit)="onSubmit()">
+        <!-- First Name & Last Name — side by side -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input
+              id="firstName"
+              type="text"
+              [(ngModel)]="firstName"
+              name="firstName"
+              placeholder="John"
+              [class.error]="errorMessage && !firstName"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input
+              id="lastName"
+              type="text"
+              [(ngModel)]="lastName"
+              name="lastName"
+              placeholder="Doe"
+              [class.error]="errorMessage && !lastName"
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="john@example.com (optional)"
+          />
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone *</label>
+          <input
+            id="phone"
+            type="tel"
+            [(ngModel)]="phone"
+            name="phone"
+            placeholder="+91 9876543210"
+            [class.error]="errorMessage && !phone"
+          />
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input
+            id="address"
+            type="text"
+            [(ngModel)]="address"
+            name="address"
+            placeholder="Enter address (optional)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-actions">
+          <a routerLink="/contacts" class="btn btn-secondary">Cancel</a>
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="saving"
+          >
+            {{ saving ? '⏳ Saving...' : (isEditMode ? '✅ Update Contact' : '✅ Create Contact') }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

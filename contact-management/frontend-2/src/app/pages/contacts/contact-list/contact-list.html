@@ -1,0 +1,115 @@
+<div class="contact-list-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2>📇 My Contacts</h2>
+    <a routerLink="/contacts/new" class="btn btn-primary">
+      ➕ Add Contact
+    </a>
+  </div>
+
+  <!-- Messages -->
+  @if (successMessage) {
+    <div class="message success">✅ {{ successMessage }}</div>
+  }
+  @if (errorMessage) {
+    <div class="message error">⚠️ {{ errorMessage }}</div>
+  }
+
+  <!-- Search & Sort Bar -->
+  <div class="toolbar card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Search by name or email..."
+      />
+      @if (searchQuery) {
+        <button class="clear-btn" (click)="clearSearch()">✕</button>
+      }
+    </div>
+
+    <div class="sort-buttons">
+      <button 
+        class="sort-btn" 
+        [class.active]="sortBy === 'name'"
+        (click)="onSort('name')"
+      >
+        Name {{ getSortIcon('name') }}
+      </button>
+      <button 
+        class="sort-btn" 
+        [class.active]="sortBy === 'date'"
+        (click)="onSort('date')"
+      >
+        Date {{ getSortIcon('date') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading contacts...</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading && contacts.length === 0) {
+    <div class="empty-state card">
+      <div class="empty-icon">📭</div>
+      <h3>No contacts found</h3>
+      @if (searchQuery) {
+        <p>No results for "{{ searchQuery }}"</p>
+        <button class="btn btn-secondary" (click)="clearSearch()">Clear Search</button>
+      } @else {
+        <p>Start by adding your first contact!</p>
+        <a routerLink="/contacts/new" class="btn btn-primary">➕ Add Contact</a>
+      }
+    </div>
+  }
+
+  <!-- Contacts Table -->
+  @if (!loading && contacts.length > 0) {
+    <div class="table-wrapper card">
+      <div class="table-info">
+        <span>Showing {{ contacts.length }} contact{{ contacts.length > 1 ? 's' : '' }}</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contact of contacts; track contact.id) {
+            <tr>
+              <td class="name-cell">
+                <div class="avatar">{{ contact.firstName[0] }}</div>
+                <span>{{ contact.firstName }} {{ contact.lastName }}</span>
+              </td>
+              <td>{{ contact.email || '—' }}</td>
+              <td>{{ contact.phone }}</td>
+              <td>{{ contact.address || '—' }}</td>
+              <td class="actions-cell">
+                <button class="action-btn edit" (click)="editContact(contact.id)" title="Edit">
+                  ✏️
+                </button>
+                <button class="action-btn delete" (click)="deleteContact(contact.id, contact.firstName)" title="Delete">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

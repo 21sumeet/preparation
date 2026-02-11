@@ -1,0 +1,99 @@
+<div class="contact-list-container">
+  <div class="header">
+    <h2>My Contacts</h2>
+    <a mat-raised-button color="primary" routerLink="/contacts/new">
+      <mat-icon>add</mat-icon> Add Contact
+    </a>
+  </div>
+
+  <!-- Search Bar -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search contacts</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search by name or email">
+    <mat-icon matPrefix>search</mat-icon>
+    @if (searchQuery) {
+      <button mat-icon-button matSuffix (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <!-- Sort -->
+  <div class="sort-buttons">
+    <button mat-stroked-button (click)="onSort('name')">
+      Sort by Name
+      @if (sortBy === 'name') {
+        <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+      }
+    </button>
+    <button mat-stroked-button (click)="onSort('date')">
+      Sort by Date
+      @if (sortBy === 'date') {
+        <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+      }
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <p class="loading">Loading contacts...</p>
+  }
+
+  <!-- No Contacts -->
+  @if (!loading && contacts.length === 0) {
+    <mat-card class="no-contacts">
+      <mat-icon>person_off</mat-icon>
+      <h3>No contacts found</h3>
+      <p>Start by adding your first contact!</p>
+      <a mat-raised-button color="primary" routerLink="/contacts/new">Add Contact</a>
+    </mat-card>
+  }
+
+  <!-- Contacts Table -->
+  @if (!loading && contacts.length > 0) {
+    <div class="table-container">
+      <table mat-table [dataSource]="contacts">
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let contact">{{ contact.firstName }} {{ contact.lastName }}</td>
+        </ng-container>
+
+        <!-- Email -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let contact">{{ contact.email || '-' }}</td>
+        </ng-container>
+
+        <!-- Phone -->
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef>Phone</th>
+          <td mat-cell *matCellDef="let contact">{{ contact.phone }}</td>
+        </ng-container>
+
+        <!-- Address -->
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let contact">{{ contact.address || '-' }}</td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let contact">
+            <button mat-icon-button color="primary" (click)="editContact(contact.id)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteContact(contact.id, contact.firstName)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  }
+</div>

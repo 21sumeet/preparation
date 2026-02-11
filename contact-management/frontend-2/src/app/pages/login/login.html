@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-icon">🔐</div>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Enter your credentials to access your account</p>
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="error-box">
+        ⚠️ {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="you@example.com"
+          [class.error]="errorMessage && !email"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+            [class.error]="errorMessage && !password"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="showPassword = !showPassword"
+          >
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <button
+        class="submit-btn"
+        type="submit"
+        [disabled]="loading"
+      >
+        {{ loading ? '⏳ Logging in...' : '→ Login' }}
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>or</span>
+    </div>
+
+    <!-- Register Link -->
+    <p class="auth-link">
+      Don't have an account? <a routerLink="/register">Create one now</a>
+    </p>
+  </div>
+</div>
