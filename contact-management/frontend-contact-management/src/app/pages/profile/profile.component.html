@@ -1,0 +1,102 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>My Profile</mat-card-title>
+      <mat-card-subtitle>Manage your account settings</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Messages -->
+      @if (successMessage) {
+        <div class="message success">✅ {{ successMessage }}</div>
+      }
+      @if (errorMessage) {
+        <div class="message error">⚠️ {{ errorMessage }}</div>
+      }
+
+      <!-- Profile Picture Section -->
+      <div class="profile-pic-section">
+        <div class="pic-wrapper">
+          @if (profilePicUrl) {
+            <img [src]="profilePicUrl" alt="Profile" class="profile-pic" />
+          } @else {
+            <div class="profile-pic-default">
+              {{ name.charAt(0).toUpperCase() }}
+            </div>
+          }
+
+          @if (loading) {
+            <div class="pic-loading">
+              <span>⏳</span>
+            </div>
+          }
+        </div>
+
+        <div class="pic-actions">
+          <!-- Hidden file input -->
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            style="display: none;"
+          />
+
+          <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="loading">
+            <mat-icon>camera_alt</mat-icon>
+            {{ profilePicUrl ? 'Change Photo' : 'Upload Photo' }}
+          </button>
+
+          @if (profilePicUrl) {
+            <button mat-stroked-button color="warn" (click)="removeProfilePic()" [disabled]="loading">
+              <mat-icon>delete</mat-icon>
+              Remove Photo
+            </button>
+          }
+
+          <p class="pic-hint">JPG, PNG, WEBP • Max 5MB</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="divider" />
+
+      <!-- Profile Info Section -->
+      <div class="profile-info">
+        <!-- Name (editable) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full Name</mat-label>
+          <input matInput [(ngModel)]="name" placeholder="Enter your name">
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <!-- Email (read-only) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput [value]="email" disabled>
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <!-- Role (read-only) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Role</mat-label>
+          <input matInput [value]="role" disabled>
+          <mat-icon matSuffix>badge</mat-icon>
+        </mat-form-field>
+
+        <!-- Save Button -->
+        <div class="save-actions">
+          <a mat-stroked-button routerLink="/contacts">← Back</a>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="updateName()" 
+            [disabled]="saving"
+          >
+            {{ saving ? '⏳ Saving...' : '✅ Save Changes' }}
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

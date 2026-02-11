@@ -9,6 +9,7 @@ import adminRoutes from './routes/admin.routes.js';
 import { rateLimiter } from './middlewares/rateLimiter.middleware.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { setupSwagger } from './config/swagger.js';
+import path from 'node:path';
 
 dotenv.config();
 
@@ -19,12 +20,16 @@ var corsOptions = {
 }
 
 // Middleware
-app.use(helmet()); //helmet is use for sercuring backend 
+//app.use(helmet()); //helmet is use for sercuring backend 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(rateLimiter);
 app.use(express.urlencoded({ extended: true }));
 setupSwagger(app);
+
+//multer serve upload file
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 
 // Routes
 app.use('/api/v1/auth', authRoutes);

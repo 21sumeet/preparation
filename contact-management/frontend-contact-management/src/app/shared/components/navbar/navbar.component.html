@@ -27,11 +27,16 @@
     }
 
     <!-- User Name -->
-    <span class="user-info">
-      <mat-icon>person</mat-icon>
-      {{ authService.currentUser()?.name }}
-      <span class="role-badge">{{ authService.currentUser()?.role }}</span>
+<a class="user-info" routerLink="/profile" routerLinkActive="active-link">
+  @if (authService.getProfilePicUrl()) {
+    <img class="nav-avatar" [src]="authService.getProfilePicUrl()" alt="Profile" />
+  } @else {
+    <span class="nav-avatar-default">
+      {{ authService.currentUser()?.name?.charAt(0)?.toUpperCase() }}
     </span>
+  }
+  {{ authService.currentUser()?.name }}
+</a>
 
     <!-- Logout Button -->
     <button 

@@ -9,6 +9,7 @@ interface User {
   name: string;
   email: string;
   role: 'USER' | 'ADMIN';
+  profilePic: string | null;  // ← ADD 
 }
 
 interface AuthResponse {
@@ -17,6 +18,19 @@ interface AuthResponse {
   data: {
     user: User;
     token: string;
+  };
+}
+//new
+interface ProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    role: 'USER' | 'ADMIN';
+    profilePic: string | null;
+    createdAt: string;
   };
 }
 
@@ -69,6 +83,65 @@ export class AuthService {
       })
     );
   }
+
+// Update profile name
+updateProfile(name: string): Observable<ProfileResponse> {
+  return this.http.put<ProfileResponse>(`${this.apiUrl}/profile`, { name }).pipe(
+    tap(response => {
+      if (response.success) {
+        const user = this.currentUser();
+        if (user) {
+          user.name = response.data.name;
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUser.set({ ...user });
+        }
+      }
+    })
+  );
+}
+
+// Upload profile picture
+uploadProfilePic(file: File): Observable<ProfileResponse> {
+  const formData = new FormData();
+  formData.append('profilePic', file);
+  return this.http.put<ProfileResponse>(`${this.apiUrl}/profile-pic`, formData).pipe(
+    tap(response => {
+      if (response.success) {
+        const user = this.currentUser();
+        if (user) {
+          user.profilePic = response.data.profilePic;
+          localStorage.setItem('user', JSON.stringify(user));  // ← updates storage
+          this.currentUser.set({ ...user });                   // ← updates signal
+        }
+      }
+    })
+  );
+}
+
+// Remove profile picture
+removeProfilePic(): Observable<ProfileResponse> {
+  return this.http.delete<ProfileResponse>(`${this.apiUrl}/profile-pic`).pipe(
+    tap(response => {
+      if (response.success) {
+        const user = this.currentUser();
+        if (user) {
+          user.profilePic = null;
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUser.set({ ...user });
+        }
+      }
+    })
+  );
+}
+
+// Get full profile pic URL
+getProfilePicUrl(): string {
+  const pic = this.currentUser()?.profilePic;
+  if (pic) {
+    return `http://localhost:5000${pic}`;
+  }
+  return '';
+}
 
   private setSession(data: { user: User; token: string }): void {
     localStorage.setItem('token', data.token);

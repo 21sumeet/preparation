@@ -1,9 +1,15 @@
 import { Router } from 'express';
-import { register, login, getProfile } from '../controllers/auth.controller';
+import { register, login, getProfile ,  
+  updateProfile,        // ← NEW
+  uploadProfilePic,     // ← NEW
+  removeProfilePic      // ← NEW 
+} from '../controllers/auth.controller';
+import { upload } from '../middlewares/upload.middleware.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { authRateLimiter } from '../middlewares/rateLimiter.middleware.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { registerValidator, loginValidator } from '../middlewares/auth.validator';
+
 
 const router = Router();
 
@@ -142,5 +148,8 @@ router.post('/login', authRateLimiter, loginValidator, validate, login);
  *         description: Internal server error
  */
 router.get('/me', authMiddleware, getProfile);
+router.put('/profile', authMiddleware, updateProfile);                          // ← NEW
+router.put('/profile-pic', authMiddleware, upload.single('profilePic'), uploadProfilePic);  // ← NEW
+router.delete('/profile-pic', authMiddleware, removeProfilePic);               // ← NEW
 
 export default router;
