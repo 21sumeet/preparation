@@ -48,6 +48,28 @@ b.key="key_id_1";
 console.log(a.key) //key_id_1
 
 //-------------------------------------------------------------------------------------------------------------------------
+//get all keys from json data
+const payload={
+    name :"username",
+    age : 21,
+    alive :true,
+    details :{
+        role :"sde",
+        salary :50000
+    }
+}
+//get all keys from json data
+function getdata(payload){
+    for( let key in payload){
+        console.log(key);
+        if(typeof payload[key]=="object"){
+            getdata(payload[key])
+        }
+    }
+}
+getdata(payload)
+
+//-------------------------------------------------------------------------------------------------------------------------
 //print obj in such a way that values should be print simple without nexted loop
 const company = {
     name : "tech company",
