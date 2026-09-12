@@ -130,3 +130,31 @@ const calculator = { factor: 10 };
 const multiplyByTen = multiply.bind(calculator);
 
 console.log(multiplyByTen(2, 3)); // 60 (2*3*10)
+
+//------------------------------------------------------------------------------------------------------
+//
+//
+//Get object and convert into query like : name=dev&ts=1000&isMobile=false
+console.log(objToQuery2({
+    name:"dev",
+    ts :1000,
+    isMobile : false,
+}))
+
+function objToQuery(obj){
+    const entries = Object.entries(obj);
+    let query = "";
+    for(let values of entries ){
+        const [key , value] = values ;
+        query = query + key + "=" + value + "&";
+    }
+    return query.slice(0, -1);
+
+}
+//optimized approch
+function objToQuery2(obj){
+    return Object.entries(obj)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+
+}
