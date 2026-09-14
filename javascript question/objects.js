@@ -158,3 +158,27 @@ function objToQuery2(obj){
         .join("&");
 
 }
+
+//------------------------------------------------------------------------------------------------------
+//
+//
+//Get string/query and convert into object like : { name: 'dev', ts: '1000', isMobile: 'false' }
+
+function queryToObject(string){  // name=dev&ts=1000&isMobile=false
+    const arr = string.split("&")
+    const obj = {};
+    for(let pair of arr){
+        // 1. Split each pair by the "=" sign
+        const [key, value] = pair.split("=");
+        
+        // 2. Add the key and value to the object
+        obj[key] = value;
+    }
+    return obj;
+    
+}
+//optimized approach
+function queryToObject(string) {
+    return Object.fromEntries(new URLSearchParams(string));
+}
+console.log(queryToObject("name=dev&ts=1000&isMobile=false"))
