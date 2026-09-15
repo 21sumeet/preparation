@@ -29,6 +29,18 @@ function multiple(a, b, c) {
 console.log(multiple(5, 2, 3));
 console.log(multiple(5)(2)(3));
 
+//infinite currying 
+function multiple(a){
+    return function(b){
+        if(b!==undefined){
+            return multiple(a*b);
+        }else{
+            return a
+        }
+    }
+}
+console.log(multiple(1)(2)(3)(4)())
+
 //example
 // Currency converter
 function convert(rate, amount) {
