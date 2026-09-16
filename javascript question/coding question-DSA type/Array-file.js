@@ -107,7 +107,7 @@ function missingNumber(arr) {
 }
 console.log(missingNumber([0, 1, 3]));
 
-//maximum consecutive 1's in arr
+//maximum consecutive 1's in arr - leetcode 485
 function maxOne(arr) {
   let count = 0,
     max = 0;
