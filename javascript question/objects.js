@@ -106,6 +106,7 @@ extract(company)
 //
 //
 //Call method - calling a function with a specific 'this' context
+//call() calls a function immediately and lets you decide what this should refer to. You pass the function arguments one by one.
 function introduce(greeting) {
   return `${greeting}, I am ${this.name} from ${this.city}`;
 }
@@ -114,6 +115,7 @@ console.log(introduce.call(user, "Hello")); // Output: Hello, I am Bob from Los 
 
 //
 //Apply method - similar to call but takes arguments as an array
+//apply() is similar to call(). It calls the function immediately and lets you decide what this should refer to, but arguments are passed as an array.
 console.log(introduce.apply(user, ["Hi"])); // Output: Hi, I am Bob from Los Angeles
 function sumNumbers(a, b, c) {
   return a + b + c;
@@ -122,6 +124,7 @@ console.log(sumNumbers.apply(null, [1, 2, 3])); // Output: 6
 
 //
 //Bind method - creates a new function with 'this' bound to the specified object
+//bind() does not call the function immediately. It creates and returns a new function with this permanently set to the specified object.
 function multiply(a, b) {
   return a * b * this.factor;
 }
