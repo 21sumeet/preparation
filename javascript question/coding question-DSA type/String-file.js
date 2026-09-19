@@ -8,6 +8,7 @@ console.log(reverse("hello"));
 //     return new StringBuilder(str).reverse().toString();
 // }
 
+//----------------------------------------------------------------------------
 // Check Palindrome - javascript
 function Palindrome(str) {
   let left = 0;
@@ -30,6 +31,7 @@ console.log(Palindrome("ananana"));
 //     return true;
 // }
 
+//----------------------------------------------------------------------------
 //count vowels-javascript
 function countVowelsConsonants(str) {
   const vowels = "aeiouAEIOU";
@@ -58,6 +60,7 @@ function countVowelsConsonants(str) {
 //     System.out.println("Vowels: " + vowelCount + ", Consonants: " + consonantCount);
 // }
 
+//----------------------------------------------------------------------------
 //Find First Non-Repeating Character - javascript
 function nonrepeating(str) {
   let map = new Map();
@@ -90,6 +93,7 @@ console.log(nonrepeating("abcasc"));
 //     return null;
 // }
 
+//----------------------------------------------------------------------------
 //Anagram Check- JavaScript
 function areAnagrams(str1, str2) {
   if (str1.length !== str2.length) return false;
@@ -109,6 +113,7 @@ function areAnagrams(str1, str2) {
 //     return Arrays.equals(arr1, arr2);
 // }
 
+//----------------------------------------------------------------------------
 // Remove Duplicates - javascript
 function removeduplicate(str) {
   let seen = new Map();
@@ -136,6 +141,7 @@ console.log(removeduplicate("abcabdef"));
 //     return result.toString();
 // }
 
+//----------------------------------------------------------------------------
 // Most Frequent Character- JavaScript
 function mostFrequentChar(str) {
   const freq = new Map();
@@ -171,6 +177,7 @@ function mostFrequentChar(str) {
 //     return maxChar;
 // }
 
+//----------------------------------------------------------------------------
 // convert single char uppercase tolowercase and lowercase to uppercase  : Hello World -> hELLO wORLD
 function convertcase(str) {
   let result = "";
@@ -203,6 +210,7 @@ console.log(convertcase("JavaScript"));
 //         return result.toString();
 // }
 
+//----------------------------------------------------------------------------
 //String Rotation Check - javascript
 function isRotated(str1, str2) {
   if (str1.length !== str2.length) return false;
@@ -215,6 +223,7 @@ console.log(isRotated("waterbottle", "erbottlewat"));
 //         return (str1 + str1).contains(str2);
 // }
 
+//----------------------------------------------------------------------------
 //revserse words , not charachter - javascript
 function reversewords(str) {
   //simple way
@@ -239,6 +248,7 @@ reversewords("hello world from sumeet"); //sumeet from world hello
 //         System.out.println(result.trim());
 //     }
 
+//----------------------------------------------------------------------------
 //reverse words in sentence but place of words should not change
 let str ="my name is sumeet";
 function reverse(str){
@@ -258,6 +268,35 @@ console.log(reverse(str)) //ym eman si teemus
 //         return result.toString().trim(); //ym eman si teemus
 //     }
 
+//----------------------------------------------------------------------------
+// Longest palindrom in string leetcode 5
+
+var longestPalindrome = function(s) {
+    let save ='';
+    
+    for ( let i = 0 ; i<s.length;i++){
+        for(let j = i ; j<s.length;j++){
+            if(isPalindrome(s, i, j)){  //check if palindrom 
+                let palString = s.slice(i, j + 1);
+                if (palString.length > save.length) {
+                    save = palString;
+                } 
+            }
+        }
+    }
+    return save;
+};
+function isPalindrome(str, i, j) {
+    while (i < j) {
+        if (str[i] !== str[j]) return false;
+        i++;
+        j--;
+    }
+    return true;
+}
+console.log(longestPalindrome("dababacd"))  // ababa
+
+//----------------------------------------------------------------------------
 //split string 
 let languages ="java,python,c++;javascript";
 console.log(languages.split(/[,;]/));
