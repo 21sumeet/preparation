@@ -214,7 +214,7 @@ console.log(convertcase("JavaScript"));
 //String Rotation Check - javascript
 function isRotated(str1, str2) {
   if (str1.length !== str2.length) return false;
-  return (str1 + str2).includes(str2);
+  return (str1 + str1).includes(str2);
 }
 console.log(isRotated("waterbottle", "erbottlewat"));
 // //java
