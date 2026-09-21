@@ -236,3 +236,22 @@ function flatten(arr) {
     return (result);
 }
 console.log(flatten(arr5))
+
+// seperate char and string form arr
+const arr = [1 ,2 , "hello" , "sumeet" , "s" ,"p" ];
+function seperate(arr){
+    const string = [];
+    const char = [];
+    for(let value of arr){
+        if(typeof value != "number"){
+            if(value.length >1){
+                string.push(value);
+            }else{
+                char.push(value);
+            }
+        }
+    }
+    console.log("string arr :" ,string);
+    console.log("char arr: " , char)
+}
+console.log(seperate(arr))  //string arr : [ 'hello', 'sumeet' ]       char arr:  [ 's', 'p' ]
