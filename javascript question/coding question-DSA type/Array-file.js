@@ -126,7 +126,7 @@ function maxOne(arr) {
 }
 console.log(maxOne([0, 1, 2, 3, 1, 1, 1, 4]));
 
-//maximum of subarray-   leetcode 53
+// maximum of subarray-   leetcode 53 
 function maxSubArray(nums) {
   let maxSoFar = nums[0];
   let currentMax = nums[0];
