@@ -185,3 +185,19 @@ function queryToObject(string) {
     return Object.fromEntries(new URLSearchParams(string));
 }
 console.log(queryToObject("name=dev&ts=1000&isMobile=false"))
+
+//------------------------------------------------------------------------------------------------------
+//
+//
+// get user name from users arr where age is more than 25 and acitive account
+const users = [
+  { id: 1, name: "Alice", active: true, age: 28 },
+  { id: 2, name: "Bob", active: false, age: 34 },
+  { id: 3, name: "Charlie", active: true, age: 22 },
+  { id: 4, name: "Diana", active: true, age: 29 },
+];
+
+let activeUserNames = users.filter((u)=> u.age >25 && u.active==true)
+                      .map((u)=>u.name);
+
+console.log(activeUserNames); //[ 'Alice', 'Diana' ]
