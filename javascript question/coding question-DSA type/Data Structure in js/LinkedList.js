@@ -35,6 +35,29 @@
 //         curr.next = newNode;
 //     }
 
+// //delete value
+//     public void delete(String data){
+//         // Case 1: The list is empty
+//         if (head == null) {
+//           return;
+//         }
+//         // Case 2: The node to delete is the head node
+//         if (head.data==data) {
+//             head = head.next;
+//             return;
+//         }
+//         Node prev = head;
+//         Node curr = head.next;
+//         while (curr != null) {
+//             if (curr.data == data) {
+//                 prev.next = curr.next; 
+//                 return; 
+//             }
+//             prev = curr;
+//             curr = curr.next;
+//         }
+//     }
+
 //     //print ll
 //     public void printll(){
 //         if(head==null){
