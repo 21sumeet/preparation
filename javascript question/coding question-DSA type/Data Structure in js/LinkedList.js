@@ -58,6 +58,31 @@
 //         }
 //     }
 
+ // public void deletefirst(){
+ //        if(head == null){
+ //                System.out.print("linkedin list is empty");
+ //        }
+ //        head = head.next;
+ //    }
+
+ //    public void deletelast(){
+ //        if(head == null){
+ //                System.out.print("linkedin list is empty");
+ //        }  
+ //        if(head.next==null){
+ //                head =null;
+ //                return;
+ //        }
+ //        Node last = head.next;
+ //        Node secondlast = head;
+ //        while(last.next != null){
+ //                last = last.next;
+ //                secondlast = secondlast.next;
+ //        }
+ //        secondlast.next = null;
+ //    }
+
+
 //     //print ll
 //     public void printll(){
 //         if(head==null){
@@ -76,6 +101,9 @@
 //         list.addFirst("1");
 //         list.addFirst("2");
 //         list.addlast("0");
+           //list.delete("0");
+          //list.deletefirst();
+          //list.deletelast();
 //         list.printll();
 
 //     }
