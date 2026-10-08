@@ -16,3 +16,22 @@ function bubblesort(arr) {
 }
 const bubble = bubblesort([4, 3, 2, 5, 1]);
 console.log(bubble);
+
+
+//Exchange sort ( most basic )
+//Time Complexity: O(n^2) space Complexity: O(1)
+//this is most standard sorting and worse compare to other sorting algo
+const arr = [80 , 10 , 12 ,15, 9, 11];
+function sort(arr){
+  for(let i = 0; i<arr.length;i++){
+    for(let j = i+1;j<arr.length;j++){
+      if(arr[i]>arr[j]){
+        let temp = arr[i];
+        arr[i]= arr[j];
+        arr[j]= temp;
+      }
+    }
+  }
+  return arr;
+}
+console.log(sort(arr))
