@@ -1,7 +1,5 @@
-import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
+import { useState, useEffect } from "react";
+import Modal from "./Model";
 import "./App.css";
 
 function App() {
@@ -10,22 +8,30 @@ function App() {
     isOpen ? setOpen(false) : setOpen(true);
   }
 
-  return (
-    <>
-      <div className="app">
-        <h1>Modal Machine Coding</h1>
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    }
 
-        <button onClick={handlemodalview}>Open Modal</button>
-        {isOpen && (
-          <div className="backdrop" onClick={handlemodalview}>
-            <div className="modal">
-              <h2>This is model preview</h2>
-              <button onClick={handlemodalview}>Close</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="app">
+      <h1>Modal Machine Coding</h1>
+
+      <button onClick={handlemodalview}>Open Modal</button>
+
+      <Modal isOpen={isOpen} onClose={() => setOpen(false)} />
+    </div>
   );
 }
 
