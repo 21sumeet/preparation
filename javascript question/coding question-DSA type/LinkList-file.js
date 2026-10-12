@@ -1,4 +1,4 @@
-// //java code - reverese linklist
+// //java code - reverese linklist - 206
 // public ListNode reverseList(ListNode head) {
 //         ListNode prev = null;
 //         ListNode curr = head;
@@ -31,7 +31,7 @@ var reverseList = function (head) {
   return prev;
 };
 
-// //merge two sorted list- java code
+// //merge two sorted list- java code - 21
 // public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
 //         if (list1 == null) return list2; // If list1 is empty, return list2
 //         if (list2 == null) return list1; // If list2 is empty, return list1
@@ -93,7 +93,7 @@ var mergeTwoLists = function (list1, list2) {
   return newhead;
 };
 
-// //detect cycle in linkelist- java
+// //detect cycle in linkelist- java - 141 
 // public boolean hasCycle(ListNode head) {
 //         if(head == null ) return false ;
 //         ListNode fast = head ;
@@ -121,7 +121,7 @@ var hasCycle = function (head) {
   return false;
 };
 
-// // remove duplicate in sorted linklist - java
+// // remove duplicate in sorted linklist - java - 83
 // public ListNode deleteDuplicates(ListNode head) {
 //         ListNode current = head;
 //         while(current!=null && current.next!=null){
