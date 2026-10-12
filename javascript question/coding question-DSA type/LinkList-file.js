@@ -144,3 +144,56 @@ var deleteDuplicates = function (head) {
   }
   return head;
 };
+
+//61. Rotate List - java code - 61
+// public ListNode rotateRight(ListNode head, int k) {
+//         if (head == null || head.next == null || k == 0) return head;
+
+//         // Step 1: Count length
+//         int len = 1;
+//         ListNode tail = head;
+//         while (tail.next != null) {
+//             len++;
+//             tail = tail.next;
+//         }
+
+//         // Step 2: Make list circular
+//         tail.next = head;
+
+//         // Step 3: Find new tail: (len - k % len)th node
+//         int stepsToNewTail = len - (k % len);
+//         ListNode newTail = head;
+//         for (int i = 1; i < stepsToNewTail; i++) {
+//             newTail = newTail.next;
+//         }
+
+//         // Step 4: Break circle
+//         ListNode newHead = newTail.next;
+//         newTail.next = null;
+
+//         return newHead;
+//     }
+var rotateRight = function(head, k) {
+    if(head === null || head.next === null || k === 0) return head;
+
+    // Step 1: Count length
+    let len = 1;
+    let tail = head;
+    while(tail.next !== null) {
+        len++;
+        tail = tail.next;
+    }
+    // Step 2: Make list circular
+    tail.next = head;
+    // Step 3: Find new tail: (len - k % len)th node
+    let stepsToNewTail = len - (k % len);
+    let newTail = head;
+    for(let i = 1; i < stepsToNewTail; i++) {
+        newTail = newTail.next;
+    }
+    // Step 4: Break circle
+    let newHead = newTail.next;
+    newTail.next = null;
+
+    return newHead;
+};
