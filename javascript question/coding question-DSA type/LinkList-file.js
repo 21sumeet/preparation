@@ -93,6 +93,27 @@ var mergeTwoLists = function (list1, list2) {
   return newhead;
 };
 
+// // 160. Intersection of 2 linked list - java - 160
+// public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+//         ListNode t1 = headA;
+//         ListNode t2 = headB;
+//         while(t1!=t2){
+//             t1 = (t1==null )? headB : t1.next;
+//             t2 = (t2==null) ? headA :t2.next;
+//         }
+//         return t1;
+// }
+var getIntersectionNode = function(headA, headB) {
+    let t1 = headA;
+    let t2 = headB;
+    while (t1 !== t2) {
+        t1 = (t1 === null) ? headB : t1.next;
+        t2 = (t2 === null) ? headA : t2.next;
+    }
+    return t1;
+};
+
+
 // //detect cycle in linkelist- java - 141 
 // public boolean hasCycle(ListNode head) {
 //         if(head == null ) return false ;
