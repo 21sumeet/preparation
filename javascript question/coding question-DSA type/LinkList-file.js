@@ -31,6 +31,73 @@ var reverseList = function (head) {
   return prev;
 };
 
+// //234. Palindrome Linked List - java 234
+//  public ListNode reverse(ListNode head) {
+//         ListNode prev = null;
+//         ListNode curr = head;
+//         while(curr != null) {
+//             ListNode next = curr.next;
+//             curr.next = prev;
+//             prev = curr;
+//             curr = next;
+//         }
+//         return prev;
+//     }
+//     public boolean isPalindrome(ListNode head) {
+//         if (head == null || head.next == null) return true;
+//         ListNode slow = head;
+//         ListNode fast = head;
+//         // Find middle of the list
+//         while(fast != null && fast.next != null){
+//             slow = slow.next;
+//             fast = fast.next.next;
+//         }
+//         // Reverse second half
+//         ListNode rev = reverse(slow);
+//         // Compare first and second halves
+//         ListNode curr = head;
+//         while(rev != null){
+//             if(curr.val != rev.val){
+//                 return false;
+//             }
+//             curr = curr.next;
+//             rev = rev.next;
+//         }
+//         return true;
+//     }
+// }
+
+var reverseList = function (head) {
+  let prev = null;
+  let curr = head;
+
+  while (curr !== null) {
+    let next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+  return prev;
+};
+var isPalindrome = function(head) {
+    let fast = head;
+    let slow = head;
+    while(fast!=null && fast.next != null){
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+
+    let rev = reverseList(slow);
+    let curr = head;
+    while(rev!=null){
+        if(rev.val != curr.val) return false;
+        rev = rev.next;
+        curr = curr.next
+    }
+    return true 
+
+};
+
 // //merge two sorted list- java code - 21
 // public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
 //         if (list1 == null) return list2; // If list1 is empty, return list2
