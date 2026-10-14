@@ -13,7 +13,9 @@ const SUGGESTIONS = [
 export default function Home() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [pendingRequests, setPendingRequests] = useState(0);
+  const messagesRef = useRef<Msg[]>([]);
+  const chatSessionRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -22,7 +24,7 @@ export default function Home() {
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, loading]);
+  }, [messages, pendingRequests]);
 
   useEffect(() => {
     const el = textareaRef.current;
@@ -33,12 +35,14 @@ export default function Home() {
 
   async function send(text?: string) {
     const content = (text ?? input).trim();
-    if (!content || loading) return;
+    if (!content) return;
 
-    const next: Msg[] = [...messages, { role: "user", content }];
+    const session = chatSessionRef.current;
+    const next: Msg[] = [...messagesRef.current, { role: "user", content }];
+    messagesRef.current = next;
     setMessages(next);
     setInput("");
-    setLoading(true);
+    setPendingRequests((count) => count + 1);
 
     try {
       const res = await fetch("/api/chat", {
@@ -47,33 +51,46 @@ export default function Home() {
         body: JSON.stringify({ messages: next }),
       });
       const data = await res.json();
-      setMessages([
-        ...next,
-        {
-          role: "assistant",
-          content: data.reply ?? `Error: ${data.error ?? "Unknown error"}`,
-        },
-      ]);
-    } catch {
-      setMessages([
-        ...next,
-        { role: "assistant", content: "Error: Could not reach the server." },
-      ]);
+      if (!res.ok) {
+        throw new Error(data.error ?? `Request failed (${res.status})`);
+      }
+      if (session === chatSessionRef.current) {
+        const updated = [
+          ...messagesRef.current,
+          { role: "assistant" as const, content: data.reply ?? "No response received." },
+        ];
+        messagesRef.current = updated;
+        setMessages(updated);
+      }
+    } catch (error) {
+      if (session === chatSessionRef.current) {
+        const updated = [
+          ...messagesRef.current,
+          {
+            role: "assistant" as const,
+            content: `Error: ${
+              error instanceof Error ? error.message : "Could not reach the server."
+            }`,
+          },
+        ];
+        messagesRef.current = updated;
+        setMessages(updated);
+      }
     } finally {
-      setLoading(false);
+      setPendingRequests((count) => Math.max(0, count - 1));
       textareaRef.current?.focus();
     }
   }
 
   return (
-    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-slate-950 text-slate-100">
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-black text-slate-100">
       {/* ambient glow */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-indigo-600/25 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-40 right-0 h-80 w-96 rounded-full bg-fuchsia-600/20 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-yellow-500/15 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 right-0 h-80 w-96 rounded-full bg-amber-400/10 blur-[120px]" />
 
       {/* header */}
       <header className="relative z-10 flex items-center gap-3 border-b border-white/10 bg-white/[0.03] px-4 py-3 backdrop-blur-xl sm:px-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-sm font-bold shadow-lg shadow-indigo-500/30">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-amber-400 text-sm font-bold text-black shadow-lg shadow-yellow-500/30">
           G
         </div>
         <div className="min-w-0">
@@ -90,7 +107,11 @@ export default function Home() {
         </div>
         {messages.length > 0 && (
           <button
-            onClick={() => setMessages([])}
+            onClick={() => {
+              chatSessionRef.current += 1;
+              messagesRef.current = [];
+              setMessages([]);
+            }}
             className="ml-auto rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
           >
             New chat
@@ -106,7 +127,7 @@ export default function Home() {
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
           {messages.length === 0 && (
             <div className="mt-8 flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-2xl font-bold shadow-xl shadow-indigo-500/30">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-300 to-amber-400 text-2xl font-bold text-black shadow-xl shadow-yellow-500/30">
                 G
               </div>
               <h2 className="mt-5 text-xl font-semibold tracking-tight sm:text-2xl">
@@ -121,7 +142,7 @@ export default function Home() {
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left text-sm text-slate-300 transition hover:border-indigo-400/40 hover:bg-white/[0.07] hover:text-white"
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left text-sm text-slate-300 transition hover:border-yellow-400/40 hover:bg-white/[0.07] hover:text-white"
                   >
                     {s}
                   </button>
@@ -141,7 +162,7 @@ export default function Home() {
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${
                   m.role === "user"
                     ? "bg-slate-700 text-slate-200"
-                    : "bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white"
+                    : "bg-gradient-to-br from-yellow-300 to-amber-400 text-black"
                 }`}
               >
                 {m.role === "user" ? "You" : "G"}
@@ -149,7 +170,7 @@ export default function Home() {
               <div
                 className={`max-w-[80%] whitespace-pre-wrap break-words px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[0.9rem] ${
                   m.role === "user"
-                    ? "rounded-2xl rounded-br-md bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-indigo-900/30"
+                    ? "rounded-2xl rounded-br-md bg-gradient-to-br from-yellow-300 to-amber-400 text-black shadow-yellow-900/30"
                     : "rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] text-slate-100 shadow-black/20 backdrop-blur"
                 }`}
               >
@@ -158,9 +179,9 @@ export default function Home() {
             </div>
           ))}
 
-          {loading && (
+          {pendingRequests > 0 && (
             <div className="flex items-end gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-xs font-semibold text-white">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-300 to-amber-400 text-xs font-semibold text-black">
                 G
               </div>
               <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-3.5 backdrop-blur">
@@ -179,7 +200,7 @@ export default function Home() {
 
       {/* composer */}
       <div className="relative z-10 border-t border-white/10 bg-white/[0.03] px-4 py-4 backdrop-blur-xl sm:px-6">
-        <div className="mx-auto flex w-full max-w-3xl items-end gap-2 rounded-2xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl shadow-black/40 transition focus-within:border-indigo-400/50">
+        <div className="mx-auto flex w-full max-w-3xl items-end gap-2 rounded-2xl border border-white/10 bg-neutral-950/90 p-2 shadow-2xl shadow-black/40 transition focus-within:border-yellow-400/50">
           <textarea
             ref={textareaRef}
             rows={1}
@@ -196,9 +217,9 @@ export default function Home() {
           />
           <button
             onClick={() => send()}
-            disabled={!input.trim() || loading}
+            disabled={!input.trim()}
             aria-label="Send message"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:shadow-none"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-amber-400 text-black shadow-lg shadow-yellow-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:shadow-none"
           >
             <svg
               viewBox="0 0 24 24"
