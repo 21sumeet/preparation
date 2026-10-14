@@ -1,17 +1,27 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
-
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
+import { createGroqClient, DEFAULT_GROQ_MODEL } from "@/lib/groq";
 
 export async function POST(req: Request) {
-  try { 
-    const { messages } = await req.json();
+  try {
+    const { messages, model } = await req.json();
+    if (!Array.isArray(messages)) {
+      return NextResponse.json(
+        { error: "Messages must be an array." },
+        { status: 400 },
+      );
+    }
+    if (model !== undefined && (typeof model !== "string" || !model.trim())) {
+      return NextResponse.json(
+        { error: "Model must be a non-empty string." },
+        { status: 400 },
+      );
+    }
 
-    const completion = await client.chat.completions.create({
-      model: process.env.GROQ_MODEL ?? "openai/gpt-oss-120b",
+    const completion = await createGroqClient().chat.completions.create({
+      model:
+        typeof model === "string" && model.trim()
+          ? model.trim()
+          : DEFAULT_GROQ_MODEL,
       messages: [
         { role: "system", content: "You are a helpful assistant." },
         ...messages,
@@ -23,6 +33,11 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: err instanceof Error ? err.message : "Something went wrong.",
+      },
+      { status: 500 },
+    );
   }
 }

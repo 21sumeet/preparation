@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 type Msg = { role: "user" | "assistant"; content: string };
+type ModelsResponse = { models: string[]; defaultModel: string };
 
 const SUGGESTIONS = [
   "Explain quantum computing simply",
@@ -14,10 +15,47 @@ export default function Home() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pendingRequests, setPendingRequests] = useState(0);
+  const [models, setModels] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState("");
+  const [modelsLoading, setModelsLoading] = useState(true);
+  const [modelsError, setModelsError] = useState("");
   const messagesRef = useRef<Msg[]>([]);
   const chatSessionRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadModels() {
+      try {
+        const res = await fetch("/api/models", { signal: controller.signal });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error ?? `Request failed (${res.status})`);
+        }
+
+        const result = data as ModelsResponse;
+        setModels(result.models);
+        setSelectedModel(
+          result.models.includes(result.defaultModel)
+            ? result.defaultModel
+            : (result.models[0] ?? result.defaultModel),
+        );
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setModelsError(
+            error instanceof Error ? error.message : "Could not load models.",
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) setModelsLoading(false);
+      }
+    }
+
+    void loadModels();
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -48,7 +86,10 @@ export default function Home() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({
+          messages: next,
+          model: selectedModel || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -105,19 +146,52 @@ export default function Home() {
             Online
           </p>
         </div>
-        {messages.length > 0 && (
-          <button
-            onClick={() => {
-              chatSessionRef.current += 1;
-              messagesRef.current = [];
-              setMessages([]);
-            }}
-            className="ml-auto rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
-          >
-            New chat
-          </button>
-        )}
+        <div className="ml-auto flex min-w-0 items-center gap-2">
+          <label className="flex min-w-0 items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-2.5 py-1.5 text-xs">
+            <span className="hidden text-slate-400 sm:inline">Using</span>
+            <select
+              aria-label="Select Groq model"
+              aria-describedby={modelsError ? "model-error" : undefined}
+              className="max-w-40 min-w-0 cursor-pointer truncate bg-transparent font-medium text-yellow-300 outline-none disabled:cursor-wait disabled:text-slate-500"
+              value={selectedModel}
+              onChange={(event) => setSelectedModel(event.target.value)}
+              disabled={modelsLoading || models.length === 0}
+              title={
+                modelsError
+                  ? `Could not load available models: ${modelsError}`
+                  : `Using ${selectedModel || "default model"}`
+              }
+            >
+              {modelsLoading && <option value="">Loading models...</option>}
+              {!modelsLoading && models.length === 0 && (
+                <option value="">Models unavailable</option>
+              )}
+              {models.map((model) => (
+                <option key={model} value={model} className="bg-neutral-950">
+                  {model}
+                </option>
+              ))}
+            </select>
+          </label>
+          {messages.length > 0 && (
+            <button
+              onClick={() => {
+                chatSessionRef.current += 1;
+                messagesRef.current = [];
+                setMessages([]);
+              }}
+              className="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
+            >
+              New chat
+            </button>
+          )}
+        </div>
       </header>
+      {modelsError && (
+        <p id="model-error" role="status" className="sr-only">
+          Could not load available models: {modelsError}
+        </p>
+      )}
 
       {/* messages */}
       <div
