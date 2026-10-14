@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { AssistantResponse } from "@/components/assistant-response";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type ModelsResponse = { models: string[]; defaultModel: string };
@@ -248,7 +249,11 @@ export default function Home() {
                     : "rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] text-slate-100 shadow-black/20 backdrop-blur"
                 }`}
               >
-                {m.content}
+                {m.role === "assistant" ? (
+                  <AssistantResponse content={m.content} />
+                ) : (
+                  m.content
+                )}
               </div>
             </div>
           ))}
