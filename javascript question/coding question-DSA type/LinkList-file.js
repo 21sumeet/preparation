@@ -233,6 +233,61 @@ var deleteDuplicates = function (head) {
   return head;
 };
 
+// //19. Remove Nth Node From End of List - java - 19
+// public ListNode removeNthFromEnd(ListNode head, int n) {
+//         if(head.next==null){
+//             return null;
+//         }
+//         ListNode curr = head ;
+//         int size = 0 ;
+//         while(curr!=null){
+//             size ++ ;
+//             curr =curr.next;
+//         }
+//         if(n==size){
+//             return head.next;
+//         }
+//         int index =size-n;
+//         int i =1;
+//         ListNode prev = head ;
+//         while(i<index){
+//             prev=prev.next;
+//             i++;
+//         }
+//         prev.next =prev.next.next;
+//         return head;
+//     }
+var removeNthFromEnd = function(head, n) {
+    if (head.next === null) {
+        return null;
+    }
+    let curr = head;
+    let size = 0;
+
+    // First pass: Calculate the size of the list
+    while (curr !== null) {
+        size++;
+        curr = curr.next;
+    }
+
+    // If we need to remove the head node
+    if (n === size) {
+        return head.next;
+    }
+
+    // Second pass: Find the node before the target
+    let index = size - n;
+    let i = 1;
+    let prev = head;
+    while (i < index) {
+        prev = prev.next;
+        i++;
+    }
+    // Remove the nth node from the end
+    prev.next = prev.next.next;
+    return head;
+};
+
 //61. Rotate List - java code - 61
 // public ListNode rotateRight(ListNode head, int k) {
 //         if (head == null || head.next == null || k == 0) return head;
