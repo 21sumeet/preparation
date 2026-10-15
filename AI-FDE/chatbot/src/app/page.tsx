@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AssistantResponse } from "@/components/assistant-response";
+import { estimateTokens, type BudgetReport } from "@/lib/input-budget";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type ModelsResponse = { models: string[]; defaultModel: string };
@@ -12,6 +13,23 @@ const SUGGESTIONS = [
   "Plan a 3-day trip to Tokyo",
 ];
 
+/** Below this share of the budget the meter stays neutral rather than amber. */
+const WARN_THRESHOLD = 0.8;
+
+function trimSummary(report: BudgetReport): string {
+  const parts: string[] = [];
+  if (report.droppedHistoryMessages > 0) {
+    parts.push(`${report.droppedHistoryMessages} older message(s) dropped`);
+  }
+  if (report.collapsedMessages > 0) {
+    parts.push(`${report.collapsedMessages} message(s) de-duplicated`);
+  }
+  if (report.truncatedMessages > 0) {
+    parts.push(`${report.truncatedMessages} message(s) truncated`);
+  }
+  return parts.join(" · ");
+}
+
 export default function Home() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -20,6 +38,8 @@ export default function Home() {
   const [selectedModel, setSelectedModel] = useState("");
   const [modelsLoading, setModelsLoading] = useState(true);
   const [modelsError, setModelsError] = useState("");
+    const [maxInputChars, setMaxInputChars] = useState(0);
+    const [budgetReport, setBudgetReport] = useState<BudgetReport | null>(null);
   const messagesRef = useRef<Msg[]>([]);
   const chatSessionRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,6 +78,24 @@ export default function Home() {
     return () => controller.abort();
   }, []);
 
+      useEffect(() => {
+        const controller = new AbortController();
+
+        async function loadBudget() {
+          try {
+            const res = await fetch("/api/budget", { signal: controller.signal });
+            if (!res.ok) return;
+            const data = await res.json();
+            if (!controller.signal.aborted) setMaxInputChars(data.maxInputChars ?? 0);
+          } catch {
+            // The meter is informational; a failure here must not disrupt chat.
+          }
+        }
+
+        void loadBudget();
+        return () => controller.abort();
+      }, []);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -71,6 +109,17 @@ export default function Home() {
     el.style.height = "auto";
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
   }, [input]);
+
+  // Mirrors the server's char budget so usage can be shown before a request is sent.
+  const usage = useMemo(() => {
+    const next = input.trim() ? [...messages, { role: "user" as const, content: input }] : messages;
+    const chars = next.reduce((sum, m) => sum + m.content.length, 0);
+    return {
+      chars,
+      tokens: estimateTokens(next.map((m) => m.content).join("\n")),
+      ratio: maxInputChars > 0 ? Math.min(1, chars / maxInputChars) : 0,
+    };
+  }, [messages, input, maxInputChars]);
 
   async function send(text?: string) {
     const content = (text ?? input).trim();
@@ -94,10 +143,16 @@ export default function Home() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? `Request failed (${res.status})`);
-      }
-      if (session === chatSessionRef.current) {
-        const updated = [
+              if (typeof data.maxInputChars === "number") {
+                setMaxInputChars(data.maxInputChars);
+              }
+              // The previous report described an earlier request, so it no longer applies.
+              setBudgetReport(null);
+              throw new Error(data.error ?? `Request failed (${res.status})`);
+            }
+            if (session === chatSessionRef.current) {
+              setBudgetReport(data.budget ?? null);
+              const updated = [
           ...messagesRef.current,
           { role: "assistant" as const, content: data.reply ?? "No response received." },
         ];
@@ -180,7 +235,8 @@ export default function Home() {
                 chatSessionRef.current += 1;
                 messagesRef.current = [];
                 setMessages([]);
-              }}
+                              setBudgetReport(null);
+                            }}
               className="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
             >
               New chat
@@ -318,6 +374,39 @@ export default function Home() {
           <kbd className="font-sans text-slate-400">Shift</kbd> +{" "}
           <kbd className="font-sans text-slate-400">Enter</kbd> for a new line
         </p>
+                {maxInputChars > 0 && (
+                          <div className="mx-auto mt-3 w-full max-w-3xl">
+                            <div className="flex items-center justify-between gap-3 text-[0.7rem]">
+                              <span className="text-slate-500">
+                                Input budget
+                                {budgetReport && trimSummary(budgetReport) && (
+                                  <span className="text-amber-400/90"> · {trimSummary(budgetReport)}</span>
+                                )}
+                              </span>
+                              <span className={usage.ratio >= WARN_THRESHOLD ? "text-amber-400" : "text-slate-400"}>
+                                {usage.chars.toLocaleString()} / {maxInputChars.toLocaleString()} chars · ~
+                                {usage.tokens.toLocaleString()} tokens
+                              </span>
+                            </div>
+                            <div
+                              role="meter"
+                              aria-label="Input budget used"
+                              aria-valuemin={0}
+                              aria-valuemax={maxInputChars}
+                              aria-valuenow={usage.chars}
+                              className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-white/10"
+                            >
+                              <div
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  usage.ratio >= WARN_THRESHOLD
+                                    ? "bg-gradient-to-r from-amber-400 to-red-400"
+                                    : "bg-gradient-to-r from-yellow-300 to-amber-400"
+                                }`}
+                                style={{ width: `${Math.max(usage.ratio * 100, usage.chars > 0 ? 1 : 0)}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
       </div>
     </div>
   );

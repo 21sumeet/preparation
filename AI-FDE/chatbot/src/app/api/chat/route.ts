@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { createGroqClient, DEFAULT_GROQ_MODEL } from "@/lib/groq";
+import {
+  fitMessagesToBudget,
+  getBudgetConfig,
+  isChatMessage,
+} from "@/lib/input-budget";
 
 export async function POST(req: Request) {
   try {
@@ -16,6 +21,28 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
+    if (!messages.every(isChatMessage)) {
+      return NextResponse.json(
+        {
+          error:
+            "Each message needs a role of system, user or assistant and string content.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const config = getBudgetConfig();
+        const budgeted = fitMessagesToBudget(messages, config);
+        if (!budgeted) {
+          return NextResponse.json(
+            {
+              error:
+                "This request is too large to send within the configured input limit. Please shorten your message or start a new chat.",
+              maxInputChars: config.maxInputChars,
+            },
+            { status: 413 },
+          );
+        }
 
     const completion = await createGroqClient().chat.completions.create({
       model:
@@ -24,13 +51,14 @@ export async function POST(req: Request) {
           : DEFAULT_GROQ_MODEL,
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        ...messages,
+        ...budgeted.messages,
       ],
     });
 
     return NextResponse.json({
       reply: completion.choices[0].message.content,
-    });
+          budget: budgeted.report,
+        });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
