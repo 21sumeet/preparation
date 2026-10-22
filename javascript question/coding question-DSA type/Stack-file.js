@@ -120,3 +120,32 @@ class MyQueue {
         return this.first.length === 0;
     }
 }
+
+
+// // 1047. Remove All Adjacent Duplicates In String
+// public String removeDuplicates(String s) {
+//         Stack<Character> stack = new Stack<>();
+//         for(char ch : s.toCharArray()){
+//             if(!stack.isEmpty() && stack.peek() ==ch){
+//                 stack.pop();
+//             }else{
+//                 stack.push(ch);
+//             }
+//         }
+//         StringBuilder result = new StringBuilder();
+//         for(char ch : stack){
+//             result.append(ch);
+//         }
+//         return  result.toString();
+//     }
+var removeDuplicates = function(s) {
+    let stack = [];
+    for(let ch of s) {
+        if(stack.length > 0 && stack[stack.length - 1] === ch) {
+            stack.pop();  // adjacent duplicate → remove
+        } else {
+            stack.push(ch);
+        }
+    }
+    return stack.join('');
+};
