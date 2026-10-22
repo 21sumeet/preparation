@@ -50,3 +50,73 @@ var isValid = function(s) {
     
     return stack.length === 0;
 };
+
+// // 232. Implement Queue using Stacks - java - 232
+// class MyQueue {
+//     private Stack<Integer> first=new Stack<Integer>();
+//     private Stack<Integer> second=new Stack<Integer>();
+//     //private int  front;
+//     public MyQueue() {  }
+//     public void push(int x) {
+//         first.push(x);
+//     }
+//     public int pop() {
+//         while(!first.isEmpty()){
+//             second.push(first.pop());
+//         }
+//         int removed=second.pop();
+//         while(!second.isEmpty()){
+//             first.push(second.pop());
+//         }
+//         return removed;
+//     }
+//     public int peek() {
+//         while(!first.isEmpty()){
+//             second.push(first.pop());
+//         }
+//         int removed=second.peek();
+//         while(!second.isEmpty()){
+//             first.push(second.pop());
+//         }
+//         return removed;
+//     }
+//     public boolean empty() {
+//         return first.isEmpty();
+//     }
+// }
+class MyQueue {
+    constructor() {
+        this.first = [];   // Stack 1
+        this.second = [];  // Stack 2
+    }
+    
+    push(x) {
+        this.first.push(x);
+    }
+    
+    pop() {
+        while(this.first.length > 0) {
+            this.second.push(this.first.pop());
+        }
+        let removed = this.second.pop();
+        while(this.second.length > 0) {
+            this.first.push(this.second.pop());
+        }
+        return removed;
+    }
+    
+    peek() {
+        while(this.first.length > 0) {
+            this.second.push(this.first.pop());
+        }
+        let removed = this.second[this.second.length - 1];  // peek
+        while(this.second.length > 0) {
+            this.first.push(this.second.pop());
+        }
+        return removed;
+    }
+    
+    empty() {
+        return this.first.length === 0;
+    }
+}
