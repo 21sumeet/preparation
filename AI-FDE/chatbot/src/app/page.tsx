@@ -40,6 +40,7 @@ export default function Home() {
   const [modelsError, setModelsError] = useState("");
     const [maxInputChars, setMaxInputChars] = useState(0);
     const [budgetReport, setBudgetReport] = useState<BudgetReport | null>(null);
+  const [portfolioMode, setPortfolioMode] = useState(false);
   const messagesRef = useRef<Msg[]>([]);
   const chatSessionRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -139,6 +140,7 @@ export default function Home() {
         body: JSON.stringify({
           messages: next,
           model: selectedModel || undefined,
+          mode: portfolioMode ? "portfolio" : undefined,
         }),
       });
       const data = await res.json();
@@ -236,6 +238,7 @@ export default function Home() {
                 messagesRef.current = [];
                 setMessages([]);
                               setBudgetReport(null);
+                              setPortfolioMode(false);
                             }}
               className="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
             >
@@ -336,6 +339,39 @@ export default function Home() {
       {/* composer */}
       <div className="relative z-10 border-t border-white/10 bg-white/[0.03] px-4 py-4 backdrop-blur-xl sm:px-6">
         <div className="mx-auto flex w-full max-w-3xl items-end gap-2 rounded-2xl border border-white/10 bg-neutral-950/90 p-2 shadow-2xl shadow-black/40 transition focus-within:border-yellow-400/50">
+          <button
+            type="button"
+            onClick={() => setPortfolioMode((enabled) => !enabled)}
+            aria-pressed={portfolioMode}
+            aria-label={
+              portfolioMode ? "Disable portfolio mode" : "Enable portfolio mode"
+            }
+            title={
+              portfolioMode
+                ? "Portfolio mode is on — describe yourself to generate index.html, styles.css and script.js"
+                : "Turn on portfolio mode to build a portfolio from your details"
+            }
+            className={`flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-xl border px-2.5 text-xs font-medium transition sm:px-3 ${
+              portfolioMode
+                ? "border-yellow-400/60 bg-yellow-400/15 text-yellow-200 shadow-lg shadow-yellow-500/10"
+                : "border-white/10 text-slate-400 hover:border-white/20 hover:bg-white/5 hover:text-slate-200"
+            }`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18M9 21V9" />
+            </svg>
+            <span className="hidden sm:inline">Portfolio</span>
+          </button>
           <textarea
             ref={textareaRef}
             rows={1}
@@ -348,7 +384,11 @@ export default function Home() {
                 send();
               }
             }}
-            placeholder="Message Grok Chatbot..."
+            placeholder={
+              portfolioMode
+                ? "Describe yourself: name, role, skills, projects, contact..."
+                : "Message Grok Chatbot..."
+            }
           />
           <button
             onClick={() => send()}
