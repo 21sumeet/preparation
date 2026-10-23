@@ -1,6 +1,7 @@
 import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { CodeBlock } from "@/components/code-block";
 
 function renderParagraph({ children }: { children?: ReactNode }) {
   const paragraphChildren = Array.isArray(children) ? children : [children];
@@ -80,11 +81,7 @@ const markdownComponents: Components = {
       {children}
     </a>
   ),
-  pre: ({ children }) => (
-    <pre className="my-4 overflow-x-auto rounded-xl border border-white/10 bg-black/60 p-4 text-sm leading-6 text-slate-200">
-      {children}
-    </pre>
-  ),
+  pre: CodeBlock,
   code: ({ children }) => (
     <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-[0.9em] text-yellow-200">
       {children}
