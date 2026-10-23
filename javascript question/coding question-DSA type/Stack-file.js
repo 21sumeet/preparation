@@ -149,3 +149,38 @@ var removeDuplicates = function(s) {
     }
     return stack.join('');
 };
+
+
+// //  496. Next Greater Element I- java - 496
+// public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+//         HashMap <Integer , Integer > map = new HashMap<>();
+//         Stack <Integer> stack = new Stack<>();
+//         for( int num : nums2){
+//             while(!stack.isEmpty() && num>stack.peek()){
+//                 map.put( stack.pop(), num);
+//             }
+//             stack.push(num);
+//         }
+//         int[] res = new int [nums1.length];
+//         for( int i =0 ; i<nums1.length ; i++){
+//             res[i] = map.getOrDefault(nums1[i] , -1);
+//         }
+//         return res ;
+//     }
+var nextGreaterElement = function(nums1, nums2) {
+    const map = new Map();
+    const stack = [];
+    // Build map: for each num in nums2, find its next greater element
+    for(let num of nums2) {
+        while(stack.length > 0 && num > stack[stack.length - 1]) {
+            map.set(stack.pop(), num);
+        }
+        stack.push(num);
+    }
+    // For each num in nums1, get its next greater or -1
+    const res = [];
+    for(let i = 0; i < nums1.length; i++) {
+        res[i] = map.has(nums1[i]) ? map.get(nums1[i]) : -1;
+    }
+    return res;
+};
