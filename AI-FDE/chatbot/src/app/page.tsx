@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AssistantResponse } from "@/components/assistant-response";
 import { estimateTokens, type BudgetReport } from "@/lib/input-budget";
+import { hasPortfolioPreview } from "@/lib/portfolio-preview";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type ModelsResponse = { models: string[]; defaultModel: string };
@@ -302,7 +303,11 @@ export default function Home() {
                 {m.role === "user" ? "You" : "G"}
               </div>
               <div
-                className={`max-w-[80%] whitespace-pre-wrap break-words px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[0.9rem] ${
+                className={`${
+                  m.role === "assistant" && hasPortfolioPreview(m.content)
+                    ? "max-w-full"
+                    : "max-w-[80%]"
+                } whitespace-pre-wrap break-words px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[0.9rem] ${
                   m.role === "user"
                     ? "rounded-2xl rounded-br-md bg-gradient-to-br from-yellow-300 to-amber-400 text-black shadow-yellow-900/30"
                     : "rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] text-slate-100 shadow-black/20 backdrop-blur"

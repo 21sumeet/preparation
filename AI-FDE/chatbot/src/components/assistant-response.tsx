@@ -2,6 +2,7 @@ import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CodeBlock } from "@/components/code-block";
+import { PortfolioPreview } from "@/components/portfolio-preview";
 
 function renderParagraph({ children }: { children?: ReactNode }) {
   const paragraphChildren = Array.isArray(children) ? children : [children];
@@ -105,6 +106,7 @@ const markdownComponents: Components = {
 export function AssistantResponse({ content }: { content: string }) {
   return (
     <div className="min-w-0 break-words">
+      <PortfolioPreview content={content} />
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
         {content}
       </ReactMarkdown>
