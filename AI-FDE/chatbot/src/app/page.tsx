@@ -44,6 +44,7 @@ export default function Home() {
   const [portfolioMode, setPortfolioMode] = useState(false);
   const messagesRef = useRef<Msg[]>([]);
   const chatSessionRef = useRef(0);
+  const streamingSessionRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -101,7 +102,7 @@ export default function Home() {
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
-      behavior: "smooth",
+      behavior: pendingRequests > 0 ? "auto" : "smooth",
     });
   }, [messages, pendingRequests]);
 
@@ -125,14 +126,19 @@ export default function Home() {
 
   async function send(text?: string) {
     const content = (text ?? input).trim();
-    if (!content) return;
-
     const session = chatSessionRef.current;
+
+    if (!content || streamingSessionRef.current === session) return;
+
     const next: Msg[] = [...messagesRef.current, { role: "user", content }];
     messagesRef.current = next;
     setMessages(next);
     setInput("");
+    streamingSessionRef.current = session;
     setPendingRequests((count) => count + 1);
+
+    let assistantIndex = -1;
+    let reply = "";
 
     try {
       const res = await fetch("/api/chat", {
@@ -144,39 +150,104 @@ export default function Home() {
           mode: portfolioMode ? "portfolio" : undefined,
         }),
       });
-      const data = await res.json();
+
       if (!res.ok) {
-              if (typeof data.maxInputChars === "number") {
-                setMaxInputChars(data.maxInputChars);
-              }
-              // The previous report described an earlier request, so it no longer applies.
-              setBudgetReport(null);
-              throw new Error(data.error ?? `Request failed (${res.status})`);
-            }
-            if (session === chatSessionRef.current) {
-              setBudgetReport(data.budget ?? null);
-              const updated = [
-          ...messagesRef.current,
-          { role: "assistant" as const, content: data.reply ?? "No response received." },
-        ];
+        const data = await res.json();
+        if (typeof data.maxInputChars === "number") {
+          setMaxInputChars(data.maxInputChars);
+        }
+        // The previous report described an earlier request, so it no longer applies.
+        setBudgetReport(null);
+        throw new Error(data.error ?? `Request failed (${res.status})`);
+      }
+
+      if (session !== chatSessionRef.current) {
+        await res.body?.cancel();
+        return;
+      }
+
+      const budgetHeader = res.headers.get("x-budget-report");
+      if (budgetHeader) {
+        try {
+          setBudgetReport(
+            JSON.parse(decodeURIComponent(budgetHeader)) as BudgetReport,
+          );
+        } catch {
+          setBudgetReport(null);
+        }
+      } else {
+        setBudgetReport(null);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("The server returned an empty response.");
+
+      const placeholder: Msg[] = [
+        ...messagesRef.current,
+        { role: "assistant", content: "" },
+      ];
+      messagesRef.current = placeholder;
+      setMessages(placeholder);
+      assistantIndex = placeholder.length - 1;
+
+      const decoder = new TextDecoder();
+
+      const append = (chunk: string) => {
+        if (!chunk) return;
+        reply += chunk;
+        const updated = messagesRef.current.map((message, index) =>
+          index === assistantIndex ? { ...message, content: reply } : message,
+        );
         messagesRef.current = updated;
         setMessages(updated);
+      };
+
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        if (session !== chatSessionRef.current) {
+          await reader.cancel();
+          return;
+        }
+
+        append(decoder.decode(value, { stream: true }));
+      }
+
+      if (session === chatSessionRef.current) {
+        append(decoder.decode());
+        if (!reply) append("No response received.");
       }
     } catch (error) {
-      if (session === chatSessionRef.current) {
+      if (session !== chatSessionRef.current) return;
+
+      const message = `Error: ${
+        error instanceof Error ? error.message : "Could not reach the server."
+      }`;
+
+      if (assistantIndex >= 0) {
+        const updated = messagesRef.current.map((item, index) =>
+          index === assistantIndex
+            ? {
+                ...item,
+                content: item.content ? `${item.content}\n\n${message}` : message,
+              }
+            : item,
+        );
+        messagesRef.current = updated;
+        setMessages(updated);
+      } else {
         const updated = [
           ...messagesRef.current,
-          {
-            role: "assistant" as const,
-            content: `Error: ${
-              error instanceof Error ? error.message : "Could not reach the server."
-            }`,
-          },
+          { role: "assistant" as const, content: message },
         ];
         messagesRef.current = updated;
         setMessages(updated);
       }
     } finally {
+      if (streamingSessionRef.current === session) {
+        streamingSessionRef.current = null;
+      }
       setPendingRequests((count) => Math.max(0, count - 1));
       textareaRef.current?.focus();
     }
@@ -322,7 +393,9 @@ export default function Home() {
             </div>
           ))}
 
-          {pendingRequests > 0 && (
+          {pendingRequests > 0 &&
+            messages.length > 0 &&
+            messages[messages.length - 1]?.role !== "assistant" && (
             <div className="flex items-end gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-300 to-amber-400 text-xs font-semibold text-black">
                 G
