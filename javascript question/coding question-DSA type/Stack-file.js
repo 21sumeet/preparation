@@ -184,3 +184,36 @@ var nextGreaterElement = function(nums1, nums2) {
     }
     return res;
 };
+
+
+// //921. Minimum Add to Make Parentheses Valid - java - 921
+// public int minAddToMakeValid(String s) {
+//         Stack<Character> stack = new Stack<>();
+//         for(char ch: s.toCharArray()){
+//             if (ch ==')'){
+//             if(!stack.isEmpty() && stack.peek() =='('){
+//                 stack.pop();
+//             }else{
+//                 stack.push(ch);
+//             }
+//             }else{
+//                 stack.push(ch);
+//             }
+//         } 
+//         return stack.size();
+//     }
+var minAddToMakeValid = function(s) {
+    const stack = [];
+    for(let ch of s) {
+        if(ch === ')') {
+            if(stack.length > 0 && stack[stack.length - 1] === '(') {
+                stack.pop();  
+            } else {
+                stack.push(ch); 
+            }
+        } else {
+            stack.push(ch); 
+        }
+    }
+    return stack.length;
+};
