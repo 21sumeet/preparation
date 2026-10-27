@@ -45,6 +45,7 @@ export default function Home() {
   const messagesRef = useRef<Msg[]>([]);
   const chatSessionRef = useRef(0);
   const streamingSessionRef = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);  // used for cancel the response inbetween while backend is streming response for users query
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -129,6 +130,9 @@ export default function Home() {
     const session = chatSessionRef.current;
 
     if (!content || streamingSessionRef.current === session) return;
+    
+    const controller = new AbortController(); //The AbortController interface represents a controller object that allows you to abort one or more Web requests as and when desired.
+    abortRef.current = controller;
 
     const next: Msg[] = [...messagesRef.current, { role: "user", content }];
     messagesRef.current = next;
@@ -149,6 +153,7 @@ export default function Home() {
           model: selectedModel || undefined,
           mode: portfolioMode ? "portfolio" : undefined,
         }),
+        signal:controller.signal,
       });
 
       if (!res.ok) {
@@ -219,6 +224,7 @@ export default function Home() {
         if (!reply) append("No response received.");
       }
     } catch (error) {
+      if(controller.signal.aborted) return ;   // Do not show an error when the user stopped the stream
       if (session !== chatSessionRef.current) return;
 
       const message = `Error: ${
@@ -245,12 +251,19 @@ export default function Home() {
         setMessages(updated);
       }
     } finally {
+      if(abortRef.current === controller){  //clear abort ref 
+        abortRef.current = null;
+      }
       if (streamingSessionRef.current === session) {
         streamingSessionRef.current = null;
       }
       setPendingRequests((count) => Math.max(0, count - 1));
       textareaRef.current?.focus();
     }
+  }
+
+  function stop(){
+    abortRef.current?.abort();
   }
 
   return (
@@ -306,6 +319,7 @@ export default function Home() {
           {messages.length > 0 && (
             <button
               onClick={() => {
+                abortRef.current?.abort();
                 chatSessionRef.current += 1;
                 messagesRef.current = [];
                 setMessages([]);
@@ -468,7 +482,25 @@ export default function Home() {
                 : "Message Grok Chatbot..."
             }
           />
-          <button
+          {pendingRequests > 0 ? ( 
+            <button
+              type="button"
+              onClick={stop}
+              aria-label="Stop generating"
+              title="Stop generating"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-slate-100 transition hover:border-white/30 hover:bg-white/15"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-3.5 w-3.5"
+                aria-hidden="true"
+              >
+                <rect x="6" y="6" width="12" height="12" rx="1.5" />
+              </svg>
+            </button>
+          ) : (
+            <button
             onClick={() => send()}
             disabled={!input.trim()}
             aria-label="Send message"
@@ -486,6 +518,25 @@ export default function Home() {
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
           </button>
+          )}
+          {/* <button
+            onClick={() => send()}
+            disabled={!input.trim()}
+            aria-label="Send message"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-amber-400 text-black shadow-lg shadow-yellow-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:shadow-none"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </button> */}
         </div>
         <p className="mx-auto mt-2 max-w-3xl text-center text-[0.7rem] text-slate-500">
           Press <kbd className="font-sans text-slate-400">Enter</kbd> to send ·{" "}

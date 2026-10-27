@@ -43,6 +43,7 @@ async function* streamReply(
   model: string,
   messages: ChatCompletionMessageParam[],
   maxCompletionTokens?: number,
+  signal?: AbortSignal,
 ): AsyncGenerator<string> {
   const conversation = [...messages];
 
@@ -58,7 +59,7 @@ async function* streamReply(
         : {}),
     };
 
-    const completion = await client.chat.completions.create(params);
+    const completion = await client.chat.completions.create(params , {signal});
 
     let content = "";
     const toolCalls = new Map<
@@ -211,6 +212,7 @@ export async function POST(req: Request) {
     // produces a normal JSON 500 instead of a half-open stream.
     const client = createGroqClient();
     const encoder = new TextEncoder();
+    const upstream = new AbortController(); //used to abort the response
     let cancelled = false;
 
     const stream = new ReadableStream<Uint8Array>({
@@ -227,6 +229,7 @@ export async function POST(req: Request) {
               ...budgeted.messages,
             ],
             isPortfolio ? getPortfolioMaxTokens() : undefined,
+            upstream.signal,
           )) {
             if (cancelled) return;
             controller.enqueue(encoder.encode(delta));
@@ -240,6 +243,7 @@ export async function POST(req: Request) {
       },
       cancel() {
         cancelled = true;
+        upstream.abort();
       },
     });
 
