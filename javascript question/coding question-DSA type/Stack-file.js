@@ -186,6 +186,50 @@ var nextGreaterElement = function(nums1, nums2) {
 };
 
 
+// //503. Next Greater Element II - java - 503
+// class Solution {
+//     public int[] nextGreaterElements(int[] nums) {
+//         int n = nums.length;
+//         int[] result = new int[n];
+//         Arrays.fill(result, -1);
+//         Stack<Integer> stack = new Stack<>();  // stores indices    
+//         for(int i = 0; i < 2 * n; i++) {
+//             int idx = i % n;
+//             while(!stack.isEmpty() && nums[idx] > nums[stack.peek()]) {
+//                 int popIdx = stack.pop();
+//                 result[popIdx] = nums[idx];
+//             }
+//             if(i < n) {
+//                 stack.push(idx);
+//             }
+//         }
+//         return result;
+//     }
+// }
+var nextGreaterElements = function(nums) {
+    const n = nums.length;
+    const result = new Array(n).fill(-1);
+    const stack = [];  // stores indices
+    
+    // Traverse 2*n elements to simulate circular array
+    for(let i = 0; i < 2 * n; i++) {
+        const idx = i % n;  // wrap around to valid index
+        
+        // While current number is greater than top of stack
+        while(stack.length > 0 && nums[idx] > nums[stack[stack.length - 1]]) {
+            const popIdx = stack.pop();
+            result[popIdx] = nums[idx];  // found next greater
+        }
+        
+        // Only push in first pass (avoid duplicate indices)
+        if(i < n) {
+            stack.push(idx);
+        }
+    }
+    
+    return result;
+};
+
 // //921. Minimum Add to Make Parentheses Valid - java - 921
 // public int minAddToMakeValid(String s) {
 //         Stack<Character> stack = new Stack<>();
